@@ -17,3 +17,7 @@ Style/CaseEquality:
 
 Layout/LineLength:
   Max: 80
+
+Style/MixinUsage:
+  Exclude:
+    - 'spec/**/*.rb'
