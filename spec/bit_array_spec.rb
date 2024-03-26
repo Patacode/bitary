@@ -61,7 +61,7 @@ RSpec.describe BitArray do
 
       bit_array.bits_per_item = 64
 
-      expect(bit_array.to_a).to eq([71_776_162_012_200_960])
+      expect(bit_array.to_a).to eq([1_095_217_315_860])
     end
 
     it 'updates the bits used per item by merging existing ones (decrease)' do
