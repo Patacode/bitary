@@ -24,10 +24,8 @@ Documentation still needs to be written, but here is a breakdown
 of the main capabilities brought by the current bit array implementation:
 
 ```ruby
-include Bitary
-
-bit_array_sz = BitArray.new(128) # give an explicit size. Defaults to 64 bits used per item
-bit_array_ar = BitArray.new(
+bit_array_sz = Bitary.new(128) # give an explicit size. Defaults to 64 bits used per item
+bit_array_ar = Bitary.new(
   [255, 10, 20],
   bits_per_item: 8
 ) # create based on some integer array
@@ -53,18 +51,18 @@ bit_array_sz.each_byte do |byte|
 end
 
 # convert
-bit_array_ar.to_a # [255, 10, 20]
-bit_array_ar.to_s # "11111111 00001010 00010100"
+bit_array_ar.to_a # [127, 10, 20]
+bit_array_ar.to_s # "01111111 00001010 00010100"
 
 # increase/decrease bits used per item
 bit_array_ar.bits_per_item = 64
-bit_array_ar.to_a # [16_714_260]
-bit_array_ar.to_s # "0000000000000000000000000000000000000000111111110000101000010100"
+bit_array_ar.to_a # [8_325_652]
+bit_array_ar.to_s # "0000000000000000000000000000000000000000011111110000101000010100"
 
 bit_array_sz.bits_per_item # 64
 bit_array_sz.to_a # [1_099_511_627_776, 0]
 bit_array_sz.bits_per_item = 32
-bit_array_sz.to_a # [256, 0, 0, 1]
+bit_array_sz.to_a # [256, 0, 0, 0]
 ```
 
 ## Development
