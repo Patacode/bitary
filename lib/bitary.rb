@@ -133,7 +133,7 @@ module Bitary
 
     def increase_items_size(array, new_size, bpi)
       processed_bits = 0
-      res = array.each_with_object([0]) do |item, acc|
+      array.each_with_object([0]) do |item, acc|
         offset = bpi
         if processed_bits >= new_size
           offset = 0
@@ -144,13 +144,6 @@ module Bitary
         acc[-1] = append_bits(acc[-1], offset, item)
         processed_bits += bpi
       end
-
-      while processed_bits < new_size
-        res[-1] = append_bits(res[-1], bpi, 0)
-        processed_bits += bpi
-      end
-
-      res
     end
 
     def decrease_items_size(array, new_size, bpi)
