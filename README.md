@@ -8,11 +8,15 @@ It's still under development, but as of now, it implements simple and well-optim
 
 Install the gem and add to the application's Gemfile by executing:
 
-  $ bundle add bitary
+```bash
+$ bundle add bitary
+```
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
-  $ gem install bitary
+```bash
+$ gem install bitary
+```
 
 ## Usage
 
