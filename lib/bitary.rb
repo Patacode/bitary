@@ -50,6 +50,10 @@ class Bitary
     self[index] = 1
   end
 
+  def unset(index)
+    self[index] = 0
+  end
+
   def each_byte(&proc)
     res = decrease_items_size(@internal_array, BYTE, @bits_per_item)
     proc ? res.each { |byte| proc.call(byte) } : res.each
