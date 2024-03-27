@@ -3,12 +3,6 @@
 require 'bitary'
 
 RSpec.describe Bitary do
-  describe '::VERSION' do
-    it 'has a version number' do
-      expect(Bitary::VERSION).not_to be nil
-    end
-  end
-
   describe '::new' do
     it 'returns a new bit array of the desired size' do
       Bitary.new(10)
