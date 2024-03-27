@@ -189,42 +189,26 @@ RSpec.describe Bitary do
 
   describe '#set' do
     it(
-      'sets the bit at given index to 1 if given value is truthy but 0 ' \
-      '(acts as #[]=)'
+      'sets the bit at given index to 1'
     ) do
       bit_array = Bitary.new([148, 145, 5], bits_per_item: 8)
 
-      bit_array.set(1, [])
-      bit_array.set(14, true)
-      bit_array.set(15, 0)
-      bit_array.set(9, 1)
+      bit_array.set(1)
+      bit_array.set(14)
+      bit_array.set(15)
+      bit_array.set(9)
 
       expect(bit_array[1]).to eq(1)
       expect(bit_array[14]).to eq(1)
-      expect(bit_array[15]).to eq(0)
+      expect(bit_array[15]).to eq(1)
       expect(bit_array[9]).to eq(1)
     end
 
-    it(
-      'sets the bit at given index to 0 if given value is falsy or 0 ' \
-      '(acts as #[]=)'
-    ) do
-      bit_array = Bitary.new([148, 145, 5], bits_per_item: 8)
-
-      bit_array.set(0, nil)
-      bit_array.set(3, false)
-      bit_array.set(16, 0)
-
-      expect(bit_array[0]).to eq(0)
-      expect(bit_array[3]).to eq(0)
-      expect(bit_array[16]).to eq(0)
-    end
-
-    it 'raises an IndexError if given index is out of bounds (acts as #[]=)' do
+    it 'raises an IndexError if given index is out of bounds' do
       bit_array = Bitary.new(10)
 
-      expect { bit_array.set(-1, 1) }.to raise_error(IndexError)
-      expect { bit_array.set(10, 0) }.to raise_error(IndexError)
+      expect { bit_array.set(-1) }.to raise_error(IndexError)
+      expect { bit_array.set(10) }.to raise_error(IndexError)
     end
   end
 
