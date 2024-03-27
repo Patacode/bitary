@@ -46,6 +46,10 @@ class Bitary
       end
   end
 
+  def set(index)
+    self[index] = 1
+  end
+
   def each_byte(&proc)
     res = decrease_items_size(@internal_array, BYTE, @bits_per_item)
     proc ? res.each { |byte| proc.call(byte) } : res.each
@@ -168,5 +172,4 @@ class Bitary
   end
 
   alias at []
-  alias set []=
 end
