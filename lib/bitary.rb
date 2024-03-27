@@ -4,10 +4,12 @@ require_relative 'bitary/size'
 require_relative 'bitary/version'
 
 class Bitary
+  include Size
+
   attr_reader :size, :bits_per_item
 
-  def initialize(initial_data, bits_per_item: 64)
-    raise ArgumentError unless [8, 16, 32, 64].include?(bits_per_item)
+  def initialize(initial_data, bits_per_item: LONG)
+    raise ArgumentError unless [BYTE, SHORT, INT, LONG].include?(bits_per_item)
 
     @size = init_size(initial_data, bits_per_item)
     @internal_array = init_internal_array(initial_data, @size, bits_per_item)
@@ -60,7 +62,7 @@ class Bitary
   end
 
   def bits_per_item=(value)
-    raise ArgumentError unless [8, 16, 32, 64].include?(value)
+    raise ArgumentError unless [8, 16, 32, Bitary::Size::LONG].include?(value)
 
     @internal_array =
       if value > @bits_per_item
