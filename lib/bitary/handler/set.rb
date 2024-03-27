@@ -8,7 +8,9 @@ class Bitary
       end
 
       def execute(**kwargs)
-        index = kwargs[:index]
+        raise ArgumentError unless kwargs.none? { |key, value| key != :index }
+
+        index = kwargs[:index] or raise KeyError
 
         bits = @value.bit_length
         raise IndexError if index < 0 || index >= bits
