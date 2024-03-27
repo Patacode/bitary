@@ -2,6 +2,8 @@
 
 class Bitary
   class Handler
+    attr_reader :value
+
     def initialize(value)
       raise ArgumentError unless value.is_a?(Integer)
 
