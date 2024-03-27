@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'handler/set'
+
 class Bitary
   class Handler
     attr_reader :value
