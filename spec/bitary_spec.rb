@@ -3,6 +3,22 @@
 require 'bitary'
 
 RSpec.describe Bitary do
+  it 'defines a size of 8 bits' do
+    expect(Bitary::BYTE).to eq(8)
+  end
+
+  it 'defines a size of 16 bits' do
+    expect(Bitary::SHORT).to eq(16)
+  end
+
+  it 'defines a size of 32 bits' do
+    expect(Bitary::INT).to eq(32)
+  end
+
+  it 'defines a size of 64 bits' do
+    expect(Bitary::LONG).to eq(64)
+  end
+
   describe '::new' do
     it 'returns a new bit array of the desired size' do
       Bitary.new(10)
