@@ -47,7 +47,7 @@ class Bitary
   end
 
   def each_byte(&proc)
-    res = decrease_items_size(@internal_array, 8, @bits_per_item)
+    res = decrease_items_size(@internal_array, BYTE, @bits_per_item)
     proc ? res.each { |byte| proc.call(byte) } : res.each
   end
 
@@ -62,7 +62,7 @@ class Bitary
   end
 
   def bits_per_item=(value)
-    raise ArgumentError unless [8, 16, 32, Bitary::Size::LONG].include?(value)
+    raise ArgumentError unless [BYTE, SHORT, INT, LONG].include?(value)
 
     @internal_array =
       if value > @bits_per_item
