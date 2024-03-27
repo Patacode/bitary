@@ -26,4 +26,12 @@ RSpec.describe Bitary::Handler do
       expect { handler.execute(1) }.to raise_error(ArgumentError)
     end
   end
+
+  describe '#value' do
+    it 'returns the integer value provided in constructor' do
+      handler = Bitary::Handler.new(100)
+
+      expect(handler.value).to eq(100)
+    end
+  end
 end
