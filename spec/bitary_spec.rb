@@ -188,9 +188,7 @@ RSpec.describe Bitary do
   end
 
   describe '#set' do
-    it(
-      'sets the bit at given index to 1'
-    ) do
+    it 'sets the bit at given index (to 1)' do
       bit_array = Bitary.new([148, 145, 5], bits_per_item: 8)
 
       bit_array.set(1)
@@ -209,6 +207,27 @@ RSpec.describe Bitary do
 
       expect { bit_array.set(-1) }.to raise_error(IndexError)
       expect { bit_array.set(10) }.to raise_error(IndexError)
+    end
+  end
+
+  describe '#unset' do
+    it 'unsets the bit at given index (to 0)' do
+      bit_array = Bitary.new([148, 145, 5], bits_per_item: 8)
+
+      bit_array.unset(0)
+      bit_array.unset(3)
+      bit_array.unset(5)
+
+      expect(bit_array[0]).to eq(0)
+      expect(bit_array[3]).to eq(0)
+      expect(bit_array[5]).to eq(0)
+    end
+
+    it 'raises an IndexError if given index is out of bounds' do
+      bit_array = Bitary.new(10)
+
+      expect { bit_array.unset(-1) }.to raise_error(IndexError)
+      expect { bit_array.unset(10) }.to raise_error(IndexError)
     end
   end
 
