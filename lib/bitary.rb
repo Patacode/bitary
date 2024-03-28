@@ -137,7 +137,7 @@ class Bitary
       end
 
       acc[-1] = Handler::Append.new(acc[-1]).execute(
-        offset: offset,
+        offset:,
         value: item
       )
       processed_bits += bpi
