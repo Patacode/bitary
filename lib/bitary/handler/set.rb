@@ -4,15 +4,18 @@ class Bitary
   class Handler
     class Set < Bitary::Handler
       def execute(**kwargs)
-        raise ArgumentError unless kwargs.none? { |key, _value| key != :index }
+        raise ArgumentError unless kwargs.all? do |key, _value|
+          %i[index size].include?(key)
+        end
 
         index = kwargs[:index] or raise KeyError
+        size = kwargs[:size] or raise KeyError
         raise ArgumentError unless index.is_a?(Integer)
+        raise ArgumentError unless size.is_a?(Integer)
 
-        bits = @value.bit_length
-        raise IndexError if index.negative? || index >= bits
+        raise IndexError if index.negative? || index >= size
 
-        @value | (2**(bits - index - 1))
+        @value | (2**(size - index - 1))
       end
     end
   end
