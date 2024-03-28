@@ -12,7 +12,7 @@ class Bitary
         bits = @value.bit_length
         raise IndexError if index.negative? || index >= bits
 
-        @value & (((2**bits) - 1) - (2**bits - index - 1))
+        @value & (((2**bits) - 1) - ((2**bits) - index - 1))
       end
     end
   end
