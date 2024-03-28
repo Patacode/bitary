@@ -33,16 +33,15 @@ class Bitary
     item_index = compute_item_index(index)
     item_bit_size = compute_item_bit_size(item_index)
     offset = compute_relative_offset(index, item_bit_size)
+    item = @internal_array[item_index]
 
     @internal_array[item_index] =
       if bit == 1
-        item = @internal_array[item_index]
         Handler::Set.new(item).execute(index: index % @bits_per_item)
       else
-        unset_bit(
-          @internal_array[item_index],
-          offset,
-          item_bit_size
+        Handler::Unset.new(item).execute(
+          index: index % @bits_per_item,
+          size: item_bit_size
         )
       end
   end
@@ -124,10 +123,6 @@ class Bitary
 
   def compute_relative_offset(index, size)
     size - (index % @bits_per_item) - 1
-  end
-
-  def unset_bit(value, offset, size)
-    value & (((2**size) - 1) - (2**offset))
   end
 
   def get_bit(value, offset)
