@@ -7,6 +7,7 @@ class Bitary
         raise ArgumentError unless kwargs.none? { |key, _value| key != :index }
 
         index = kwargs[:index] or raise KeyError
+        raise ArgumentError unless index.is_a?(Integer)
 
         bits = @value.bit_length
         raise IndexError if index.negative? || index >= bits
