@@ -3,10 +3,6 @@
 class Bitary
   class Handler
     class Set < Bitary::Handler
-      def initialize(value)
-        super
-      end
-
       def execute(**kwargs)
         raise ArgumentError unless kwargs.none? { |key, value| key != :index }
 
