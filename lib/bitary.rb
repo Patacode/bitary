@@ -37,7 +37,10 @@ class Bitary
 
     @internal_array[item_index] =
       if bit == 1
-        Handler::Set.new(item).execute(index: index % @bits_per_item)
+        Handler::Set.new(item).execute(
+          index: index % @bits_per_item,
+          size: item_bit_size
+        )
       else
         Handler::Unset.new(item).execute(
           index: index % @bits_per_item,
