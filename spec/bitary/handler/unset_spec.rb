@@ -10,6 +10,18 @@ RSpec.describe Bitary::Handler::Unset do
       expect(bit_unsetter.execute(index: 0, size: 8)).to eq(0)
     end
 
+    it 'raises a KeyError if no index kwarg is provided' do
+      bit_unsetter = Bitary::Handler::Unset.new(128)
+
+      expect { bit_unsetter.execute(size: 8) }.to raise_error(KeyError)
+    end
+
+    it 'raises a KeyError if no size kwarg is provided' do
+      bit_unsetter = Bitary::Handler::Unset.new(128)
+
+      expect { bit_unsetter.execute(index: 3) }.to raise_error(KeyError)
+    end
+
     it 'raises an ArgumentError if provided index is not an integer' do
       bit_unsetter = Bitary::Handler::Unset.new(128)
 
@@ -29,26 +41,12 @@ RSpec.describe Bitary::Handler::Unset do
     it 'raises an IndexError if provided index is out of bounds' do
       bit_unsetter = Bitary::Handler::Unset.new(128)
 
-      expect { bit_unsetter.execute(index: -1) }.to raise_error(IndexError)
-      expect { bit_unsetter.execute(index: 8) }.to raise_error(IndexError)
-    end
-
-    it 'raises a KeyError if no index kwarg is provided' do
-      bit_unsetter = Bitary::Handler::Unset.new(128)
-
-      expect { bit_unsetter.execute(size: 8) }.to raise_error(KeyError)
-    end
-
-    it 'raises a KeyError if no size kwarg is provided' do
-      bit_unsetter = Bitary::Handler::Unset.new(128)
-
-      expect { bit_unsetter.execute(index: 3) }.to raise_error(KeyError)
-    end
-
-    it 'raises a KeyError if no index nor size kwargs are provided' do
-      bit_unsetter = Bitary::Handler::Unset.new(128)
-
-      expect { bit_unsetter.execute }.to raise_error(KeyError)
+      expect { bit_unsetter.execute(index: -1, size: 8) }.to raise_error(
+        IndexError
+      )
+      expect { bit_unsetter.execute(index: 8, size: 8) }.to raise_error(
+        IndexError
+      )
     end
 
     it(
