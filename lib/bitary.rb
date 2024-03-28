@@ -36,7 +36,8 @@ class Bitary
 
     @internal_array[item_index] =
       if bit == 1
-        set_bit(@internal_array[item_index], offset)
+        item = @internal_array[item_index]
+        Handler::Set.new(item).execute(index: index % @bits_per_item)
       else
         unset_bit(
           @internal_array[item_index],
@@ -123,10 +124,6 @@ class Bitary
 
   def compute_relative_offset(index, size)
     size - (index % @bits_per_item) - 1
-  end
-
-  def set_bit(value, offset)
-    value | (2**offset)
   end
 
   def unset_bit(value, offset, size)
