@@ -4,7 +4,7 @@ class Bitary
   class Handler
     class Set < Bitary::Handler
       def execute(**kwargs)
-        raise ArgumentError unless kwargs.none? { |key, value| key != :index }
+        raise ArgumentError unless kwargs.none? { |key, _value| key != :index }
 
         index = kwargs[:index] or raise KeyError
 
