@@ -128,7 +128,7 @@ class Bitary
 
   def increase_items_size(array, new_size, bpi)
     processed_bits = 0
-    array.each_with_object([0]) do |item, acc|
+    array.each_with_object([0]) do |value, acc|
       offset = bpi
       if processed_bits >= new_size
         offset = 0
@@ -136,10 +136,7 @@ class Bitary
         processed_bits = 0
       end
 
-      acc[-1] = Handler::Append.new(acc[-1]).execute(
-        offset:,
-        value: item
-      )
+      acc[-1] = Handler::Append.new(acc[-1]).execute(offset:, value:)
       processed_bits += bpi
     end
   end
