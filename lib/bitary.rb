@@ -21,7 +21,6 @@ class Bitary
 
     item_index = compute_item_index(index)
     item_bit_size = compute_item_bit_size(item_index)
-    offset = compute_relative_offset(index, item_bit_size)
     item = @internal_array[item_index]
 
     Handler::Get.new(item).execute(
@@ -36,7 +35,6 @@ class Bitary
     bit = map_to_bit(value)
     item_index = compute_item_index(index)
     item_bit_size = compute_item_bit_size(item_index)
-    offset = compute_relative_offset(index, item_bit_size)
     item = @internal_array[item_index]
 
     @internal_array[item_index] =
@@ -126,10 +124,6 @@ class Bitary
 
   def compute_item_index(index)
     index / @bits_per_item
-  end
-
-  def compute_relative_offset(index, size)
-    size - (index % @bits_per_item) - 1
   end
 
   def append_bits(value, offset, bits)
