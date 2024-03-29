@@ -1,5 +1,10 @@
 ## [0.1.2] - 2024-03-29
 
+- fix some missing require statements
+- further refactoring of Bitary class
+
+## [0.1.2] - 2024-03-29
+
 - internal refactoring of the Bitary class
 - addition of integer size enum
 
