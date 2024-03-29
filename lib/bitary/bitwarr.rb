@@ -23,6 +23,12 @@ class Bitary
       @array.respond_to?(method, include_all) || super
     end
 
+    def bpi=(value)
+      raise ArgumentError unless value.is_a?(Integer)
+
+      @bpi = value
+    end
+
     private
 
     def init_size(initial_data)
