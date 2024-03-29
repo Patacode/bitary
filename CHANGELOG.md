@@ -1,3 +1,8 @@
+## [0.1.2] - 2024-03-29
+
+- internal refactoring of the Bitary class
+- addition of integer size enum
+
 ## [0.1.1] - 2024-03-26
 
 - Change root namespace to a class, instead of a module
