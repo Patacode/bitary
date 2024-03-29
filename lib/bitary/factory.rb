@@ -7,12 +7,12 @@ class Bitary
     private_class_method :new
     @container = Deptainer.new
 
-    def self.make(name, *args, **kwargs)
+    def self.make(name, *, **)
       raise ArgumentError unless name.is_a?(String)
 
       name.split('::').reduce(Bitary) do |cls, str|
         cls.const_get(str)
-      end.new(*args, **kwargs)
+      end.new(*, **)
     end
 
     def self.make_memo(name, *args, **kwargs)
