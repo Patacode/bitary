@@ -2,6 +2,7 @@
 
 require_relative 'bitary/size'
 require_relative 'bitary/version'
+require_relative 'bitary/factory'
 
 class Bitary
   include Size
@@ -23,10 +24,10 @@ class Bitary
     item_bit_size = compute_item_bit_size(item_index)
     item = @internal_array[item_index]
 
-    Handler::Get.new(item).execute(
-      index: index % @bits_per_item,
-      size: item_bit_size
-    )
+    Factory.make('Handler::Get', item).execute(
+        index: index % @bits_per_item,
+        size: item_bit_size
+      )
   end
 
   def []=(index, value)
@@ -39,12 +40,12 @@ class Bitary
 
     @internal_array[item_index] =
       if bit == 1
-        Handler::Set.new(item).execute(
+        Factory.make('Handler::Set', item).execute(
           index: index % @bits_per_item,
           size: item_bit_size
         )
       else
-        Handler::Unset.new(item).execute(
+        Factory.make('Handler::Unset', item).execute(
           index: index % @bits_per_item,
           size: item_bit_size
         )
