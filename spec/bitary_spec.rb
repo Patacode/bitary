@@ -29,15 +29,15 @@ RSpec.describe Bitary do
     end
 
     it 'returns a new bit array using some given element size in bits' do
-      Bitary.new(100, bits_per_item: 64)
+      Bitary.new(100, bpi: 64)
     end
 
-    it 'raises an ArgumentError if bits_per_item is not in [8, 16, 32, 64]' do
-      expect { Bitary.new(100, bits_per_item: 9) }.to raise_error(
+    it 'raises an ArgumentError if bpi is not in [8, 16, 32, 64]' do
+      expect { Bitary.new(100, bpi: 9) }.to raise_error(
         ArgumentError
       )
 
-      expect { Bitary.new(100, bits_per_item: 24) }.to raise_error(
+      expect { Bitary.new(100, bpi: 24) }.to raise_error(
         ArgumentError
       )
     end
@@ -47,7 +47,7 @@ RSpec.describe Bitary do
     it 'returns the size of the bit array, in bits' do
       bit_array1 = Bitary.new(10)
       bit_array2 = Bitary.new([255, 10, 20])
-      bit_array3 = Bitary.new(100, bits_per_item: 64)
+      bit_array3 = Bitary.new(100, bpi: 64)
 
       expect(bit_array1.size).to eq(10)
       expect(bit_array2.size).to eq(192)
@@ -55,33 +55,33 @@ RSpec.describe Bitary do
     end
   end
 
-  describe '#bits_per_item' do
+  describe '#bpi' do
     it 'returns the number of bits used by each item in the internal array' do
-      bit_array = Bitary.new(10, bits_per_item: 32)
+      bit_array = Bitary.new(10, bpi: 32)
 
-      expect(bit_array.bits_per_item).to eq(32)
+      expect(bit_array.bpi).to eq(32)
     end
 
     it 'returns a default value of 64' do
       bit_array = Bitary.new(10)
 
-      expect(bit_array.bits_per_item).to eq(64)
+      expect(bit_array.bpi).to eq(64)
     end
   end
 
-  describe '#bits_per_item=' do
+  describe '#bpi=' do
     it 'updates the bits used per item by merging existing ones (increase)' do
-      bit_array = Bitary.new([255, 10, 20], bits_per_item: 16)
+      bit_array = Bitary.new([255, 10, 20], bpi: 16)
 
-      bit_array.bits_per_item = 64
+      bit_array.bpi = 64
 
       expect(bit_array.to_a).to eq([1_095_217_315_860])
     end
 
     it 'updates the bits used per item by merging existing ones (decrease)' do
-      bit_array = Bitary.new([255, 10, 20], bits_per_item: 16)
+      bit_array = Bitary.new([255, 10, 20], bpi: 16)
 
-      bit_array.bits_per_item = 8
+      bit_array.bpi = 8
 
       expect(bit_array.to_a).to eq([0, 255, 0, 10, 0, 20])
     end
@@ -89,8 +89,8 @@ RSpec.describe Bitary do
     it 'raises an ArgumentError if value is not in [8, 16, 32, 64]' do
       bit_array = Bitary.new(10)
 
-      expect { bit_array.bits_per_item = 40 }.to raise_error(ArgumentError)
-      expect { bit_array.bits_per_item = 65 }.to raise_error(ArgumentError)
+      expect { bit_array.bpi = 40 }.to raise_error(ArgumentError)
+      expect { bit_array.bpi = 65 }.to raise_error(ArgumentError)
     end
   end
 
@@ -98,8 +98,8 @@ RSpec.describe Bitary do
     it 'returns accurately the internal array backed by the bit array' do
       bit_array1 = Bitary.new(10)
       bit_array2 = Bitary.new([255, 10, 20])
-      bit_array3 = Bitary.new([300, 10, 20], bits_per_item: 16)
-      bit_array4 = Bitary.new(16, bits_per_item: 8)
+      bit_array3 = Bitary.new([300, 10, 20], bpi: 16)
+      bit_array4 = Bitary.new(16, bpi: 8)
 
       expect(bit_array1.to_a).to eq([0])
       expect(bit_array2.to_a).to eq([255, 10, 20])
@@ -118,7 +118,7 @@ RSpec.describe Bitary do
 
   describe '#[]' do
     it 'returns the value of the bit at given index' do
-      bit_array = Bitary.new([148, 145, 5], bits_per_item: 8)
+      bit_array = Bitary.new([148, 145, 5], bpi: 8)
 
       expect(bit_array[0]).to eq(1)
       expect(bit_array[8]).to eq(1)
@@ -136,7 +136,7 @@ RSpec.describe Bitary do
 
   describe '#[]=' do
     it 'sets the bit at given index to 1 if given value is truthy but 0' do
-      bit_array = Bitary.new([148, 145, 5], bits_per_item: 8)
+      bit_array = Bitary.new([148, 145, 5], bpi: 8)
 
       bit_array[1] = []
       bit_array[14] = true
@@ -150,7 +150,7 @@ RSpec.describe Bitary do
     end
 
     it 'sets the bit at given index to 0 if given value is falsy or 0' do
-      bit_array = Bitary.new([148, 145, 5], bits_per_item: 8)
+      bit_array = Bitary.new([148, 145, 5], bpi: 8)
 
       bit_array[0] = nil
       bit_array[3] = false
@@ -171,7 +171,7 @@ RSpec.describe Bitary do
 
   describe '#at' do
     it 'returns the value of the bit at given index (acts as #[])' do
-      bit_array = Bitary.new([148, 145, 5], bits_per_item: 8)
+      bit_array = Bitary.new([148, 145, 5], bpi: 8)
 
       expect(bit_array.at(0)).to eq(1)
       expect(bit_array.at(8)).to eq(1)
@@ -189,7 +189,7 @@ RSpec.describe Bitary do
 
   describe '#set' do
     it 'sets the bit at given index (to 1)' do
-      bit_array = Bitary.new([148, 145, 5], bits_per_item: 8)
+      bit_array = Bitary.new([148, 145, 5], bpi: 8)
 
       bit_array.set(1)
       bit_array.set(14)
@@ -212,7 +212,7 @@ RSpec.describe Bitary do
 
   describe '#unset' do
     it 'unsets the bit at given index (to 0)' do
-      bit_array = Bitary.new([148, 145, 5], bits_per_item: 8)
+      bit_array = Bitary.new([148, 145, 5], bpi: 8)
 
       bit_array.unset(0)
       bit_array.unset(3)
@@ -233,7 +233,7 @@ RSpec.describe Bitary do
 
   describe '#to_s' do
     it 'returns the binary string representation of the whole bit array' do
-      bit_array1 = Bitary.new([148, 145, 5], bits_per_item: 8)
+      bit_array1 = Bitary.new([148, 145, 5], bpi: 8)
 
       expect(bit_array1.to_s).to eq('10010100 10010001 00000101')
     end
@@ -241,7 +241,7 @@ RSpec.describe Bitary do
 
   describe '#each_byte' do
     it 'iterates over each byte of the bit array' do
-      bit_array = Bitary.new([255, 10, 20], bits_per_item: 8)
+      bit_array = Bitary.new([255, 10, 20], bpi: 8)
 
       index = 0
       bit_array.each_byte do |byte|
@@ -256,7 +256,7 @@ RSpec.describe Bitary do
     end
 
     it 'returns an enumerator if no callback is given' do
-      bit_array = Bitary.new([255, 10, 20], bits_per_item: 8)
+      bit_array = Bitary.new([255, 10, 20], bpi: 8)
 
       expect(bit_array.each_byte).to be_an(Enumerator)
     end
