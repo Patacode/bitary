@@ -25,9 +25,9 @@ class Bitary
     item = @internal_array[item_index]
 
     Factory.make('Handler::Get', item).execute(
-        index: index % @bits_per_item,
-        size: item_bit_size
-      )
+      index: index % @bits_per_item,
+      size: item_bit_size
+    )
   end
 
   def []=(index, value)
