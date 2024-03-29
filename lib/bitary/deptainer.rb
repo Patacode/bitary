@@ -21,7 +21,7 @@ class Bitary
     def has?(key)
       raise ArgumentError unless key.is_a?(Symbol)
 
-      @store.has_key?(key)
+      @store.key?(key)
     end
   end
 end
