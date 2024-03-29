@@ -16,15 +16,9 @@ class Bitary
   end
 
   def [](index)
-    raise IndexError if index.negative? || index >= @internal_array.bitsize
-
-    item_index = compute_item_index(index)
-    item_bit_size = compute_item_bit_size(item_index)
-    item = @internal_array[item_index]
-
-    Factory.make('Handler::Get', item).execute(
-      index: index % @internal_array.bpi,
-      size: item_bit_size
+    Factory.make('Handler::Get', @internal_array[index]).execute(
+      index: @internal_array.relative_bitindex(index),
+      size: @internal_array.bitsize(index)
     )
   end
 
@@ -32,19 +26,19 @@ class Bitary
     raise IndexError if index.negative? || index >= @internal_array.bitsize
 
     bit = map_to_bit(value)
-    item_index = compute_item_index(index)
-    item_bit_size = compute_item_bit_size(item_index)
-    item = @internal_array[item_index]
+    relative_bitindex = @internal_array.relative_bitindex(index)
+    item_bit_size = @internal_array.bitsize(index)
+    item = @internal_array[index]
 
-    @internal_array[item_index] =
+    @internal_array[index] =
       if bit == 1
         Factory.make('Handler::Set', item).execute(
-          index: index % @internal_array.bpi,
+          index: relative_bitindex,
           size: item_bit_size
         )
       else
         Factory.make('Handler::Unset', item).execute(
-          index: index % @internal_array.bpi,
+          index: relative_bitindex,
           size: item_bit_size
         )
       end
@@ -108,18 +102,6 @@ class Bitary
     else
       0
     end
-  end
-
-  def compute_item_bit_size(index)
-    if index == @internal_array.length - 1
-      @internal_array.bitsize - ((@internal_array.length - 1) * @internal_array.bpi)
-    else
-      @internal_array.bpi
-    end
-  end
-
-  def compute_item_index(index)
-    index / @internal_array.bpi
   end
 
   def increase_items_size(array, new_size, bpi)
