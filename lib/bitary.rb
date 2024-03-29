@@ -9,31 +9,27 @@ require_relative 'bitary/bitwarr'
 class Bitary
   include Size
 
-  attr_reader :size, :bits_per_item
-
   def initialize(initial_data, bits_per_item: LONG)
     raise ArgumentError unless [BYTE, SHORT, INT, LONG].include?(bits_per_item)
 
-    @size = init_size(initial_data, bits_per_item)
-    @internal_array = init_internal_array(initial_data, @size, bits_per_item)
-    @bits_per_item = bits_per_item
+    @internal_array = Bitwarr.new(initial_data, bpi: bits_per_item)
   end
 
   def [](index)
-    raise IndexError if index.negative? || index >= @size
+    raise IndexError if index.negative? || index >= @internal_array.size
 
     item_index = compute_item_index(index)
     item_bit_size = compute_item_bit_size(item_index)
     item = @internal_array[item_index]
 
     Factory.make('Handler::Get', item).execute(
-      index: index % @bits_per_item,
+      index: index % @internal_array.bpi,
       size: item_bit_size
     )
   end
 
   def []=(index, value)
-    raise IndexError if index.negative? || index >= @size
+    raise IndexError if index.negative? || index >= @internal_array.size
 
     bit = map_to_bit(value)
     item_index = compute_item_index(index)
@@ -43,12 +39,12 @@ class Bitary
     @internal_array[item_index] =
       if bit == 1
         Factory.make('Handler::Set', item).execute(
-          index: index % @bits_per_item,
+          index: index % @internal_array.bpi,
           size: item_bit_size
         )
       else
         Factory.make('Handler::Unset', item).execute(
-          index: index % @bits_per_item,
+          index: index % @internal_array.bpi,
           size: item_bit_size
         )
       end
@@ -63,47 +59,44 @@ class Bitary
   end
 
   def each_byte(&proc)
-    res = decrease_items_size(@internal_array, BYTE, @bits_per_item)
+    res = decrease_items_size(@internal_array, BYTE, @internal_array.bpi)
     proc ? res.each { |byte| proc.call(byte) } : res.each
   end
 
   def to_a
-    @internal_array.clone
+    @internal_array.to_a
   end
 
   def to_s
     @internal_array.map do |item|
-      format("%0#{@bits_per_item}d", item.to_s(2))
+      format("%0#{@internal_array.bpi}d", item.to_s(2))
     end.join(' ')
   end
 
   def bits_per_item=(value)
     raise ArgumentError unless [BYTE, SHORT, INT, LONG].include?(value)
 
-    @internal_array =
-      if value > @bits_per_item
-        increase_items_size(@internal_array, value, @bits_per_item)
+    @internal_array = Bitwarr.new(
+      if value > @internal_array.bpi
+        increase_items_size(@internal_array, value, @internal_array.bpi)
       else
-        decrease_items_size(@internal_array, value, @bits_per_item)
-      end
+        decrease_items_size(@internal_array, value, @internal_array.bpi)
+      end,
+      bpi: @internal_array.bpi
+    )
 
-    @bits_per_item = value
+    @internal_array.bpi = value
+  end
+
+  def size
+    @internal_array.size
+  end
+
+  def bits_per_item
+    @internal_array.bpi
   end
 
   private
-
-  def init_size(initial_data, bits_per_item)
-    if initial_data.is_a?(Array)
-      bits_per_item * initial_data.length
-    else
-      initial_data
-    end
-  end
-
-  def init_internal_array(initial_data, size, bits_per_item)
-    res = [0] * (size / bits_per_item.to_f).ceil
-    initial_data.is_a?(Array) ? initial_data.clone : res
-  end
 
   def map_to_bit(value)
     if value
@@ -119,14 +112,14 @@ class Bitary
 
   def compute_item_bit_size(index)
     if index == @internal_array.length - 1
-      size - ((@internal_array.length - 1) * @bits_per_item)
+      @internal_array.size - ((@internal_array.length - 1) * @internal_array.bpi)
     else
-      @bits_per_item
+      @internal_array.bpi
     end
   end
 
   def compute_item_index(index)
-    index / @bits_per_item
+    index / @internal_array.bpi
   end
 
   def increase_items_size(array, new_size, bpi)
