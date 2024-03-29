@@ -97,4 +97,21 @@ RSpec.describe Bitary::Bitwarr do
       expect { bitwarr.bpi(a: 1) }.to raise_error(ArgumentError)
     end
   end
+
+  describe '#bpi=' do
+    it 'sets the bits per item to the new given integer value' do
+      bitwarr = Bitary::Bitwarr.new(128, bpi: 8)
+
+      bitwarr.bpi = 64
+
+      expect(bitwarr.bpi).to eq(64)
+    end
+
+
+    it 'raises an ArgumentError if given arg is not Integer' do
+      bitwarr = Bitary::Bitwarr.new(128)
+
+      expect { bitwarr.bpi = 'hello' }.to raise_error(ArgumentError)
+    end
+  end
 end
