@@ -12,7 +12,7 @@ class Bitary
   def initialize(initial_data, bpi: LONG)
     raise ArgumentError unless [BYTE, SHORT, INT, LONG].include?(bpi)
 
-    @internal_array = Bitwarr.new(initial_data, bpi: bpi)
+    @internal_array = Bitwarr.new(initial_data, bpi:)
   end
 
   def [](index)
