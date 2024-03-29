@@ -33,12 +33,12 @@ RSpec.describe Bitary::Deptainer do
   describe '#[]' do
     include_context :deptainer
 
-    it 'raises an ArgumentError if provided key is not a Symbol' do
-      expect { @container['wrong'] }.to raise_error(ArgumentError)
+    it 'returns nil if provided key does not exist' do
+      expect(@container[:unknown]).to eq(nil)
     end
 
-    it 'raises a KeyError if provided key does not exist' do
-      expect { @container[:unkown] }.to raise_error(KeyError)
+    it 'raises an ArgumentError if provided key is not a Symbol' do
+      expect { @container['wrong'] }.to raise_error(ArgumentError)
     end
   end
 
