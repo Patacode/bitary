@@ -21,7 +21,7 @@ RSpec.describe Bitary::Factory do
   end
 
   describe '::make' do
-    it 'returns a new fresh instance of the provided class string'do
+    it 'returns a new fresh instance of the provided class string' do
       instance = Bitary::Factory.make('Nest::FakeClass')
 
       expect(instance).to be_instance_of(Bitary::Nest::FakeClass)
