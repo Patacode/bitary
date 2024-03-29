@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require_relative 'deptainer'
-
 class Bitary
   class Factory
     private_class_method :new
-    @container = Deptainer.new
+    @container = {}
 
     def self.make(name, *, **)
       raise ArgumentError unless name.is_a?(String)
@@ -17,7 +15,7 @@ class Bitary
 
     def self.make_memo(name, *args, **kwargs)
       raise ArgumentError unless name.is_a?(String)
-      if @container.has?(name.to_sym) && !args.empty? && !kwargs.empty?
+      if @container.key?(name.to_sym) && !args.empty? && !kwargs.empty?
         raise ArgumentError
       end
 
