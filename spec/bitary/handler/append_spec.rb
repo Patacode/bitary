@@ -21,9 +21,9 @@ RSpec.describe Bitary::Handler::Append do
     end
 
     it 'raises an ArgumentError if provided value is not an integer' do
-      expect { @bit_appender.execute(offset: 4, value: 'hello') }.to raise_error(
-        ArgumentError
-      )
+      expect do
+        @bit_appender.execute(offset: 4, value: 'hello')
+      end.to raise_error(ArgumentError)
     end
 
     it 'raises an ArgumentError if provided offset is not an integer' do
