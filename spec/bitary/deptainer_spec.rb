@@ -51,7 +51,7 @@ RSpec.describe Bitary::Deptainer do
       expect(@container[:dep]).to eq(55)
     end
 
-    it'overrides a dependency if some previously defined key is used' do
+    it 'overrides a dependency if some previously defined key is used' do
       @container[:dep] = 55
       @container[:dep] = 'hello'
 
