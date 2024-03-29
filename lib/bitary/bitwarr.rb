@@ -2,7 +2,7 @@
 
 class Bitary
   class Bitwarr
-    attr_reader :size, :bpi
+    attr_reader :bitsize, :bpi
 
     def initialize(initial_data, bpi: Bitary::LONG)
       unless initial_data.is_a?(Array) || initial_data.is_a?(Integer)
@@ -11,7 +11,7 @@ class Bitary
       raise ArgumentError unless bpi.is_a?(Integer)
 
       @bpi = bpi
-      @size = init_size(initial_data)
+      @bitsize = init_bitsize(initial_data)
       @array = init_array(initial_data)
     end
 
@@ -31,7 +31,7 @@ class Bitary
 
     private
 
-    def init_size(initial_data)
+    def init_bitsize(initial_data)
       initial_data.is_a?(Array) ? @bpi * initial_data.length : initial_data
     end
 
@@ -39,7 +39,7 @@ class Bitary
       if initial_data.is_a?(Array)
         initial_data.clone
       else
-        [0] * (@size / @bpi.to_f).ceil
+        [0] * (@bitsize / @bpi.to_f).ceil
       end
     end
   end
