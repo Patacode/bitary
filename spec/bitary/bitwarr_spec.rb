@@ -167,7 +167,6 @@ RSpec.describe Bitary::Bitwarr do
       expect(bitwarr.bpi).to eq(64)
     end
 
-
     it 'raises an ArgumentError if given arg is not Integer' do
       bitwarr = Bitary::Bitwarr.new(128)
 
@@ -250,7 +249,7 @@ RSpec.describe Bitary::Bitwarr do
 
     it 'raises an IndexError if given bit index is out of bounds' do
       bitwarr = Bitary::Bitwarr.new([1, 2, 3], bpi: 8)
-      
+
       expect { bitwarr.relative_bit_index(-1) }.to raise_error(IndexError)
       expect { bitwarr.relative_bit_index(24) }.to raise_error(IndexError)
     end
