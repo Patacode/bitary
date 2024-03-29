@@ -56,24 +56,24 @@ RSpec.describe Bitary::Bitwarr do
     end
   end
 
-  describe '#size' do
-    it 'returns the size of the Bitwarr when built with explicit size' do
+  describe '#bitsize' do
+    it 'returns the bit size of the Bitwarr when built with explicit size' do
       bitwarr = Bitary::Bitwarr.new(128)
 
-      expect(bitwarr.size).to eq(128)
+      expect(bitwarr.bitsize).to eq(128)
     end
 
-    it 'returns the size of the Bitwarr when built from an array' do
+    it 'returns the bit size of the Bitwarr when built from an array' do
       bitwarr = Bitary::Bitwarr.new([1, 2, 3])
 
-      expect(bitwarr.size).to eq(192)
+      expect(bitwarr.bitsize).to eq(192)
     end
 
     it 'raises an ArgumentError if args are provided' do
       bitwarr = Bitary::Bitwarr.new(128)
 
-      expect { bitwarr.size('tt') }.to raise_error(ArgumentError)
-      expect { bitwarr.size(a: 1) }.to raise_error(ArgumentError)
+      expect { bitwarr.bitsize('tt') }.to raise_error(ArgumentError)
+      expect { bitwarr.bitsize(a: 1) }.to raise_error(ArgumentError)
     end
   end
 
