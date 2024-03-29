@@ -9,10 +9,10 @@ require_relative 'bitary/bitwarr'
 class Bitary
   include Size
 
-  def initialize(initial_data, bits_per_item: LONG)
-    raise ArgumentError unless [BYTE, SHORT, INT, LONG].include?(bits_per_item)
+  def initialize(initial_data, bpi: LONG)
+    raise ArgumentError unless [BYTE, SHORT, INT, LONG].include?(bpi)
 
-    @internal_array = Bitwarr.new(initial_data, bpi: bits_per_item)
+    @internal_array = Bitwarr.new(initial_data, bpi: bpi)
   end
 
   def [](index)
@@ -73,7 +73,7 @@ class Bitary
     end.join(' ')
   end
 
-  def bits_per_item=(value)
+  def bpi=(value)
     raise ArgumentError unless [BYTE, SHORT, INT, LONG].include?(value)
 
     @internal_array = Bitwarr.new(
@@ -92,7 +92,7 @@ class Bitary
     @internal_array.bitsize
   end
 
-  def bits_per_item
+  def bpi
     @internal_array.bpi
   end
 
