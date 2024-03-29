@@ -16,7 +16,7 @@ class Bitary
   end
 
   def [](index)
-    raise IndexError if index.negative? || index >= @internal_array.size
+    raise IndexError if index.negative? || index >= @internal_array.bitsize
 
     item_index = compute_item_index(index)
     item_bit_size = compute_item_bit_size(item_index)
@@ -29,7 +29,7 @@ class Bitary
   end
 
   def []=(index, value)
-    raise IndexError if index.negative? || index >= @internal_array.size
+    raise IndexError if index.negative? || index >= @internal_array.bitsize
 
     bit = map_to_bit(value)
     item_index = compute_item_index(index)
@@ -89,7 +89,7 @@ class Bitary
   end
 
   def size
-    @internal_array.size
+    @internal_array.bitsize
   end
 
   def bits_per_item
@@ -112,7 +112,7 @@ class Bitary
 
   def compute_item_bit_size(index)
     if index == @internal_array.length - 1
-      @internal_array.size - ((@internal_array.length - 1) * @internal_array.bpi)
+      @internal_array.bitsize - ((@internal_array.length - 1) * @internal_array.bpi)
     else
       @internal_array.bpi
     end
