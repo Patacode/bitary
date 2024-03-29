@@ -17,7 +17,7 @@ class Bitary
 
   def [](index)
     Factory.make('Handler::Get', @internal_array[index]).execute(
-      index: @internal_array.relative_bitindex(index),
+      index: @internal_array.relative_bit_index(index),
       size: @internal_array.bitsize(index)
     )
   end
@@ -26,19 +26,19 @@ class Bitary
     raise IndexError if index.negative? || index >= @internal_array.bitsize
 
     bit = map_to_bit(value)
-    relative_bitindex = @internal_array.relative_bitindex(index)
+    relative_bit_index = @internal_array.relative_bit_index(index)
     item_bit_size = @internal_array.bitsize(index)
     item = @internal_array[index]
 
     @internal_array[index] =
       if bit == 1
         Factory.make('Handler::Set', item).execute(
-          index: relative_bitindex,
+          index: relative_bit_index,
           size: item_bit_size
         )
       else
         Factory.make('Handler::Unset', item).execute(
-          index: relative_bitindex,
+          index: relative_bit_index,
           size: item_bit_size
         )
       end
