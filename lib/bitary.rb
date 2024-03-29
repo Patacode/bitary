@@ -139,7 +139,10 @@ class Bitary
         processed_bits = 0
       end
 
-      acc[-1] = Handler::Append.new(acc[-1]).execute(offset:, value:)
+      acc[-1] = Factory.make('Handler::Append', acc[-1]).execute(
+        offset:,
+        value:
+      )
       processed_bits += bpi
     end
   end
