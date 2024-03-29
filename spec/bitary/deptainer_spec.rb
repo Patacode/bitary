@@ -62,4 +62,24 @@ RSpec.describe Bitary::Deptainer do
       expect { @container['wrong'] = 55 }.to raise_error(ArgumentError)
     end
   end
+
+  describe '#has?' do
+    include_context :deptainer
+
+    it 'returns true if container has given key' do
+      @container[:dep] = 55
+
+      expect(@container.has?(:dep)).to be(true)
+    end
+
+    it 'returns false if container does not have given key' do
+      @container[:dep] = 55
+
+      expect(@container.has?(:dop)).to be(false)
+    end
+
+    it 'raises an ArgumentError if provided key is not a Symbol' do
+      expect { @container.has?('wrong') }.to raise_error(ArgumentError)
+    end
+  end
 end
