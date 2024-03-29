@@ -54,7 +54,7 @@ class Bitary
       @array[item_index(bit_index)] = value
     end
 
-    def relative_bitindex(bit_index)
+    def relative_bit_index(bit_index)
       check_bit_index(bit_index)
 
       bit_index % @bpi
