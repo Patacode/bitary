@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+#require_relative 'decorator/kwargs_validator'
+
 class Bitary
   class Decorator
     def initialize(wrappee, &proc)
@@ -8,18 +10,21 @@ class Bitary
     end
 
     def method_missing(method, *, **, &)
-      if @wrappee.respond_to?(method) && @predicate.call(method)
-        args, kwargs = precall(method, *, **)
-        resp = @wrappee.send(method, *args, **kwargs, &)
-        postcall(resp)
+      if @wrappee.respond_to?(method)
+        if @predicate.call(method)
+          args, kwargs = precall(method, *, **)
+          resp = @wrappee.send(method, *args, **kwargs, &)
+          postcall(resp)
+        else
+          @wrappee.send(method, *, **, &)
+        end
       else
         super
       end
     end
 
     def respond_to_missing?(method, include_all = false)
-      wrappee_can_be_called = @wrappee.respond_to?(method, include_all)
-      wrappee_can_be_called && @predicate.call(method) || super
+      @wrappee.respond_to?(method, include_all) || super
     end
 
     protected
