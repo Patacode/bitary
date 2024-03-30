@@ -22,10 +22,9 @@ class Bitary
   end
 
   def []=(index, value)
-    if Mapper::ObjToBit.new.map(value) == 1
-      @internal_array.bit_at!(index)
-    else
-      @internal_array.unbit_at!(index)
+    case Mapper::ObjToBit.new.map(value)
+    when 0 then @internal_array.unbit_at!(index)
+    else @internal_array.bit_at!(index)
     end
   end
 
