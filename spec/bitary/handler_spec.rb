@@ -5,7 +5,8 @@ require 'bitary'
 RSpec.describe Bitary::Handler do
   describe '::new' do
     it 'returns a new Handler instance with provided integer value' do
-      expect(Bitary::Handler.new(10)).to be_instance_of(Bitary::Handler)
+      handler = Bitary::Handler.new(10)
+      expect(handler.wrappee).to be_instance_of(Bitary::Handler)
     end
 
     it 'raises an ArgumentError if provided value is not an integer' do
