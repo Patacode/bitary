@@ -6,6 +6,7 @@ require_relative 'bitary/handler'
 require_relative 'bitary/factory'
 require_relative 'bitary/bitwarr'
 require_relative 'bitary/decorator'
+require_relative 'bitary/mapper'
 
 class Bitary
   include Size
@@ -21,7 +22,7 @@ class Bitary
   end
 
   def []=(index, value)
-    if map_to_bit(value) == 1
+    if Mapper::ObjToBit.new.map(value) == 1
       @internal_array.bit_at!(index)
     else
       @internal_array.unbit_at!(index)
@@ -75,18 +76,6 @@ class Bitary
   end
 
   private
-
-  def map_to_bit(value)
-    if value
-      if value.is_a?(Integer)
-        value.zero? ? 0 : 1
-      else
-        1
-      end
-    else
-      0
-    end
-  end
 
   def increase_items_size(array, new_size, bpi)
     processed_bits = 0
