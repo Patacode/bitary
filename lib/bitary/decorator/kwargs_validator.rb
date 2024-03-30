@@ -69,11 +69,11 @@ class Bitary
       end
 
       def check_required(value)
-        raise ArgumentError unless value == true || value == false
+        raise ArgumentError unless [true, false].include?(value)
       end
 
       def check_default(value)
-        raise ArgumentError if false
+        # NOTHING TODO
       end
 
       def check_type(value)
