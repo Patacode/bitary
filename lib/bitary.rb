@@ -36,9 +36,8 @@ class Bitary
     self[index] = 0
   end
 
-  def each_byte(&proc)
-    res = decrease_items_size(@internal_array, BYTE, @internal_array.bpi)
-    proc ? res.each { |byte| proc.call(byte) } : res.each
+  def each_byte(&)
+    @internal_array.each_byte(&)
   end
 
   def to_a
