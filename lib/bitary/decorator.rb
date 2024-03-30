@@ -27,6 +27,16 @@ class Bitary
       @wrappee.respond_to?(method, include_all) || super
     end
 
+    def wrappee
+      res = @wrappee
+
+      while res.respond_to?(:wrappee)
+        res = res.wrappee  
+      end
+
+      res
+    end
+
     protected
 
     def precall(_method, *args, **kwargs)
