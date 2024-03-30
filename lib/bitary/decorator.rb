@@ -29,11 +29,7 @@ class Bitary
 
     def wrappee
       res = @wrappee
-
-      while res.respond_to?(:wrappee)
-        res = res.wrappee  
-      end
-
+      res = res.wrappee while res.respond_to?(:wrappee)
       res
     end
 
