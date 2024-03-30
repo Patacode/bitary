@@ -110,7 +110,7 @@ class Bitary
       end
 
       def check_kwargs_against_spec(user_kwargs, method_spec)
-        predicates = []
+        predicate = nil
 
         method_spec.reduce({}) do |acc, entry|
           kwarg_name, kwarg_spec = entry
@@ -118,7 +118,7 @@ class Bitary
 
           validate_required(user_kwargs, loaded_spec, kwarg_name)
           validate_type(user_kwargs, loaded_spec, kwarg_name)
-          predicates << loaded_spec[:predicate]
+          predicate = loaded_spec[:predicate]
 
           value =
             if user_kwargs.key?(kwarg_name)
@@ -128,9 +128,7 @@ class Bitary
             end
           acc.merge(kwarg_name => value)
         end.tap do |parsed_kwargs|
-          predicates.each do |predicate|
-            validate_predicate(parsed_kwargs, predicate)
-          end
+          predicate && validate_predicate(parsed_kwargs, predicate)
         end
       end
 
