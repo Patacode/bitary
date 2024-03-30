@@ -5,6 +5,7 @@ require_relative 'bitary/version'
 require_relative 'bitary/handler'
 require_relative 'bitary/factory'
 require_relative 'bitary/bitwarr'
+require_relative 'bitary/decorator'
 
 class Bitary
   include Size
