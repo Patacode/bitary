@@ -335,7 +335,7 @@ RSpec.describe Bitary::Decorator::KwargsValidator do
         execute: {
           one: {
             predicate: {
-              callback: ->(value) { value > 10 },
+              callback: ->(**kwargs) { kwargs[:one] > 10 },
               error: ArgumentError
             }
           }
@@ -353,7 +353,7 @@ RSpec.describe Bitary::Decorator::KwargsValidator do
             required: true,
             type: Integer,
             predicate: {
-              callback: ->(value) { value > 10 },
+              callback: ->(**kwargs) { kwargs[:one] > 10 },
               error: ArgumentError
             }
           }
@@ -462,9 +462,15 @@ RSpec.describe Bitary::Decorator::KwargsValidator do
             required: true,
             type: Integer,
             predicate: {
-              callback: ->(value) { value >= 0 && value < 10 },
+              callback: lambda do |**kwargs|
+                kwargs[:one] >= 0 && kwargs[:one] < kwargs[:two]
+              end,
               error: IndexError
             }
+          },
+          two: {
+            required: true,
+            type: Integer
           }
         }
       }
