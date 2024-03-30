@@ -446,7 +446,7 @@ RSpec.describe Bitary::Decorator::KwargsValidator do
       spec = {
         execute: {
           one: {
-            type: String 
+            type: String
           }
         }
       }
