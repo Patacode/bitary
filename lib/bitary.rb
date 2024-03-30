@@ -21,8 +21,6 @@ class Bitary
   end
 
   def []=(index, value)
-    raise IndexError if index.negative? || index >= @internal_array.bitsize
-
     if map_to_bit(value) == 1
       @internal_array.bit_at!(index)
     else
