@@ -19,7 +19,7 @@ RSpec.describe Bitary::Decorator::NonNilEnforcer do
     it 'returns a new instance with given wrappee and method' do
       deco = Bitary::Decorator::NonNilEnforcer.new(fake_class.new, :execute)
 
-      expect(deco).to be_instance_of(Bitary::Decorator::NonNilEnforcer) 
+      expect(deco).to be_instance_of(Bitary::Decorator::NonNilEnforcer)
     end
 
     it 'raises an ArgumentError if given method is not a Symbol' do
@@ -53,7 +53,7 @@ RSpec.describe Bitary::Decorator::NonNilEnforcer do
       @execute_deco =
         Bitary::Decorator::NonNilEnforcer.new(fake_class.new, :execute)
     end
-  
+
     it "returns the method's original return value if non-nil" do
       expect(@execute_deco.execute(a: 1)).to eq({a: 1})
     end
