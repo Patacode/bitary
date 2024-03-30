@@ -64,7 +64,7 @@ RSpec.describe Bitary::Decorator do
     it 'does not modify the original wrappee implementation by default' do
       deco = Bitary::Decorator.new(fake_class.new)
 
-      expect(deco.execute(a: 1, b: 2)).to eq({a: 1, b: 2})
+      expect(deco.execute(a: 1, b: 2)).to eq({ a: 1, b: 2 })
     end
 
     it 'decorates methods matching the predicate' do
