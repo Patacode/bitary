@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#require_relative 'decorator/kwargs_validator'
+require_relative 'decorator/kwargs_validator'
 
 class Bitary
   class Decorator
