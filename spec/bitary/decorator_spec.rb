@@ -101,4 +101,13 @@ RSpec.describe Bitary::Decorator do
       expect { deco.execute(1, a: 1, b: 2) }.to raise_error(ArgumentError)
     end
   end
+
+  describe '#wrappee' do
+    it 'returns the original wrappee' do
+      wrappee = fake_class.new
+      deco = Bitary::Decorator.new(Bitary::Decorator.new(wrappee))
+
+      expect(deco.wrappee).to be(wrappee)
+    end
+  end
 end
