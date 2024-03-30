@@ -429,7 +429,7 @@ RSpec.describe Bitary::Decorator::KwargsValidator do
       expect(deco.execute(one: 'two')).to eq({ one: 'two' })
     end
 
-    it 'raises an ArgumentError if required arg is not given' do
+    it 'raises an KeyError if required arg is not given' do
       spec = {
         execute: {
           one: {
@@ -439,7 +439,7 @@ RSpec.describe Bitary::Decorator::KwargsValidator do
       }
       deco = Bitary::Decorator::KwargsValidator.new(fake_class.new, spec)
 
-      expect { deco.execute }.to raise_error(ArgumentError)
+      expect { deco.execute }.to raise_error(KeyError)
     end
 
     it 'raises an ArgumentError if provided arg is not of the right type' do
