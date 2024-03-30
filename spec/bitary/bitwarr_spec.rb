@@ -377,4 +377,24 @@ RSpec.describe Bitary::Bitwarr do
       expect { arr.each_byte(a: 1) }.to raise_error(ArgumentError)
     end
   end
+
+  describe '#to_s' do
+    let(:arr) do
+      Bitary::Bitwarr.new([1, 2, 3], bpi: 16)
+    end
+
+    it 'converts the internal array to a binary string' do
+      expect(arr.to_s).to eq(
+        '0000000000000001 0000000000000010 0000000000000011'
+      )
+    end
+
+    it 'raises an ArgumentError if pos args are given' do
+      expect { arr.to_s(1) }.to raise_error(ArgumentError)
+    end
+
+    it 'raises an ArgumentError if kwargs are given' do
+      expect { arr.to_s(a: 1) }.to raise_error(ArgumentError)
+    end
+  end
 end
