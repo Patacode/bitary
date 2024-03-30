@@ -55,7 +55,7 @@ RSpec.describe Bitary::Decorator::NonNilEnforcer do
     end
 
     it "returns the method's original return value if non-nil" do
-      expect(@execute_deco.execute(a: 1)).to eq({a: 1})
+      expect(@execute_deco.execute(a: 1)).to eq({ a: 1 })
     end
 
     it(
