@@ -39,7 +39,7 @@ class Bitary
       def check_spec_method_value(method_spec)
         raise ArgumentError unless method_spec.is_a?(Hash)
 
-        method_spec.values.each do |arg_spec|
+        method_spec.each_value do |arg_spec|
           raise ArgumentError unless arg_spec.is_a?(Hash)
 
           check_arg_spec(arg_spec)
