@@ -13,7 +13,7 @@ class Bitary
       protected
 
       def precall(method, *, **)
-        super method, *, **check_kwargs(@spec, method, **)
+        super(method, *, **check_kwargs(@spec, method, **))
       end
 
       private
