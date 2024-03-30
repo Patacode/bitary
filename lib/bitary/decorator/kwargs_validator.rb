@@ -81,12 +81,23 @@ class Bitary
       end
 
       def check_predicate(value)
-        available_keys = %i[callback error]
         raise ArgumentError unless value.is_a?(Hash)
+
+        check_predicate_keys(value)
+        check_predicate_values(value)
+      end
+
+      def check_predicate_keys(value)
+        available_keys = %i[callback error]
+
         raise ArgumentError unless value.keys.all? do |key|
           available_keys.include?(key)
         end
+
         raise KeyError unless value.key?(:callback) && value.key?(:error)
+      end
+
+      def check_predicate_values(value)
         raise ArgumentError unless value[:callback].is_a?(Proc)
         raise ArgumentError unless value[:error].is_a?(Class)
         raise ArgumentError unless value[:error] < Exception
