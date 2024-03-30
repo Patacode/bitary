@@ -48,26 +48,51 @@ RSpec.describe Bitary::Decorator do
   end
 
   describe 'every wrappee instance methods' do
-    it 'responds to the same methods that wrappee defines by default' do
+    it 'responds to the same methods that wrappee defines' do
       deco = Bitary::Decorator.new(fake_class.new)
 
       expect(deco).to respond_to(:execute)
       expect(deco).to respond_to(:run)
     end
 
-    it 'responds to methods from wrappee matching predicate' do
-      deco = Bitary::Decorator.new(fake_class.new) do |method|
-        method == :execute
-      end
+    it 'does not respond to methods not defined by wrappee' do
+      deco = Bitary::Decorator.new(fake_class.new)
 
-      expect(deco).to respond_to(:execute)
-      expect(deco).not_to respond_to(:run)
+      expect(deco).not_to respond_to(:unknown)
     end
 
     it 'does not modify the original wrappee implementation by default' do
       deco = Bitary::Decorator.new(fake_class.new)
 
       expect(deco.execute(a: 1, b: 2)).to eq({a: 1, b: 2})
+    end
+
+    it 'decorates methods matching the predicate' do
+      deco = Bitary::Decorator.new(fake_class.new) do |method|
+        method == :execute
+      end
+
+      allow(deco).to receive(:precall).with(:execute).and_return([[], {}])
+      allow(deco).to receive(:postcall).with({}).and_return({})
+
+      deco.execute
+
+      expect(deco).to have_received(:precall).exactly(1).time
+      expect(deco).to have_received(:postcall).exactly(1).time
+    end
+
+    it 'calls wrappee methods without alteration if do not match predicate' do
+      deco = Bitary::Decorator.new(fake_class.new) do |method|
+        method == :execute
+      end
+
+      allow(deco).to receive(:precall).exactly(0).time
+      allow(deco).to receive(:postcall).exactly(0).time
+
+      deco.run
+
+      expect(deco).to have_received(:precall).exactly(0).time
+      expect(deco).to have_received(:postcall).exactly(0).time
     end
 
     it 'raises an ArgumentError if unexpected args are given' do
