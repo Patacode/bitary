@@ -476,7 +476,7 @@ RSpec.describe Bitary::Decorator::KwargsValidator do
       }
       deco = Bitary::Decorator::KwargsValidator.new(fake_class.new, spec)
 
-      expect { deco.execute(one: -1) }.to raise_error(IndexError)
+      expect { deco.execute(one: -1, two: 10) }.to raise_error(IndexError)
     end
   end
 end
