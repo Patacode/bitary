@@ -110,13 +110,15 @@ class Bitary
       end
 
       def check_kwargs_against_spec(user_kwargs, method_spec)
+        predicates = []
+
         method_spec.reduce({}) do |acc, entry|
           kwarg_name, kwarg_spec = entry
           loaded_spec = load_spec(kwarg_spec)
 
           validate_required(user_kwargs, loaded_spec, kwarg_name)
           validate_type(user_kwargs, loaded_spec, kwarg_name)
-          validate_predicate(user_kwargs, loaded_spec, kwarg_name)
+          predicates << loaded_spec[:predicate]
 
           value =
             if user_kwargs.key?(kwarg_name)
@@ -125,6 +127,10 @@ class Bitary
               loaded_spec[:default]
             end
           acc.merge(kwarg_name => value)
+        end.tap do |parsed_kwargs|
+          predicates.each do |predicate|
+            validate_predicate(parsed_kwargs, predicate)
+          end
         end
       end
 
@@ -152,11 +158,10 @@ class Bitary
         raise ArgumentError unless user_kwargs[expected_key].is_a?(spec[:type])
       end
 
-      def validate_predicate(user_kwargs, spec, expected_key)
-        return unless user_kwargs.key?(expected_key)
-        return if spec[:predicate][:callback].call(user_kwargs[expected_key])
+      def validate_predicate(parsed_kwargs, predicate)
+        return if predicate[:callback].call(**parsed_kwargs)
 
-        raise spec[:predicate][:error]
+        raise predicate[:error]
       end
     end
   end
