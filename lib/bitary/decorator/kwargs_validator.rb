@@ -55,9 +55,8 @@ class Bitary
           check_arg_spec_entry(spec_key, spec_value)
         end
 
-        if arg_spec.key?(:required) && arg_spec[:required]
-          raise ArgumentError if arg_spec.key?(:default)
-        end
+        return unless arg_spec.key?(:required) && arg_spec[:required]
+        raise ArgumentError if arg_spec.key?(:default)
       end
 
       def check_arg_spec_entry(key, value)
