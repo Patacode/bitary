@@ -82,6 +82,10 @@ class Bitary
       decrease_items_size(@array, Bitary::BYTE, @bpi).each(&)
     end
 
+    def to_s
+      @array.map { |item| format("%0#{@bpi}d", item.to_s(2)) }.join(' ')
+    end
+
     private
 
     def init_bitsize(initial_data)
