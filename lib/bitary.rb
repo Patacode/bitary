@@ -12,7 +12,7 @@ class Bitary
   include Size
 
   def initialize(initial_data, bpi: LONG)
-    raise ArgumentError unless [BYTE, SHORT, INT, LONG].include?(bpi)
+    check_bpi(bpi)
 
     @internal_array = Bitwarr.new(initial_data, bpi:)
   end
@@ -51,7 +51,7 @@ class Bitary
   end
 
   def bpi=(value)
-    raise ArgumentError unless [BYTE, SHORT, INT, LONG].include?(value)
+    check_bpi(value)
 
     @internal_array = Bitwarr.new(
       if value > @internal_array.bpi
@@ -74,6 +74,10 @@ class Bitary
   end
 
   private
+
+  def check_bpi(bpi)
+    raise ArgumentError unless [BYTE, SHORT, INT, LONG].include?(bpi)
+  end
 
   def increase_items_size(array, new_size, bpi)
     processed_bits = 0
