@@ -6,7 +6,7 @@ class Bitary
   class Decorator
     def initialize(wrappee, &proc)
       @wrappee = wrappee
-      @predicate = proc || ->(method) { true }
+      @predicate = proc || ->(_method) { true }
     end
 
     def method_missing(method, *, **, &)
