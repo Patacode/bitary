@@ -218,7 +218,7 @@ RSpec.describe Bitary::Decorator::KwargsValidator do
         execute: {
           one: {
             predicate: {
-              callback: ->(_value){ true },
+              callback: ->(_value) { true },
               error: 4
             }
           }
@@ -235,7 +235,7 @@ RSpec.describe Bitary::Decorator::KwargsValidator do
         execute: {
           one: {
             predicate: {
-              callback: ->(_value){ true },
+              callback: ->(_value) { true },
               error: Integer
             }
           }
