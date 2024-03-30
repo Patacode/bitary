@@ -141,25 +141,22 @@ class Bitary
       end
 
       def validate_required(user_kwargs, spec, expected_key)
-        if spec[:required]
-          raise ArgumentError unless user_kwargs.key?(expected_key)
-        end
+        return unless spec[:required]
+
+        raise ArgumentError unless user_kwargs.key?(expected_key)
       end
 
       def validate_type(user_kwargs, spec, expected_key)
-        if user_kwargs.key?(expected_key)
-          raise ArgumentError unless user_kwargs[expected_key].is_a?(
-            spec[:type]
-          )
-        end
+        return unless user_kwargs.key?(expected_key)
+
+        raise ArgumentError unless user_kwargs[expected_key].is_a?(spec[:type])
       end
 
       def validate_predicate(user_kwargs, spec, expected_key)
-        if user_kwargs.key?(expected_key)
-          unless spec[:predicate][:callback].call(user_kwargs[expected_key])
-            raise spec[:predicate][:error]
-          end
-        end
+        return unless user_kwargs.key?(expected_key)
+        return if spec[:predicate][:callback].call(user_kwargs[expected_key])
+
+        raise spec[:predicate][:error]
       end
     end
   end
