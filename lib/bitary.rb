@@ -45,9 +45,7 @@ class Bitary
   end
 
   def to_s
-    @internal_array.map do |item|
-      format("%0#{@internal_array.bpi}d", item.to_s(2))
-    end.join(' ')
+    @internal_array.to_s
   end
 
   def bpi=(value)
