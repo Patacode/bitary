@@ -3,19 +3,25 @@
 class Bitary
   class Handler
     class Set < Bitary::Handler
+      SPEC = {
+        index: {
+          required: true,
+          type: Integer,
+          predicate: {
+            callback: lambda do |**kwargs|
+              kwargs[:index] >= 0 && kwargs[:index] < kwargs[:size]
+            end,
+            error: IndexError
+          }
+        },
+        size: {
+          required: true,
+          type: Integer
+        }
+      }.freeze
+
       def execute(**kwargs)
-        raise ArgumentError unless kwargs.all? do |key, _value|
-          %i[index size].include?(key)
-        end
-
-        index = kwargs[:index] or raise KeyError
-        size = kwargs[:size] or raise KeyError
-        raise ArgumentError unless index.is_a?(Integer)
-        raise ArgumentError unless size.is_a?(Integer)
-
-        raise IndexError if index.negative? || index >= size
-
-        @value | (2**(size - index - 1))
+        @value | (2**(kwargs[:size] - kwargs[:index] - 1))
       end
     end
   end
