@@ -274,4 +274,89 @@ RSpec.describe Bitary::Bitwarr do
       )
     end
   end
+
+  describe '#bit_at' do
+    let(:arr) do
+      Bitary::Bitwarr.new([1, 2, 3], bpi: 8)
+    end
+
+    it 'gets the bit at given bit index' do
+      expect(arr.bit_at(14)).to eq(1)
+    end
+
+    it 'raises an IndexError if given bit index is out of bounds' do
+      expect { arr.bit_at(-1) }.to raise_error(IndexError)
+      expect { arr.bit_at(24) }.to raise_error(IndexError)
+    end
+
+    it 'raises an ArgumentError if given bit index is not Integer' do
+      expect { arr.bit_at('test') }.to raise_error(ArgumentError)
+    end
+
+    it 'raises an ArgumentError if more than 1 pos arg is given' do
+      expect { arr.bit_at(1, 2) }.to raise_error(ArgumentError)
+    end
+
+    it 'raises an ArgumentError if kwargs are given' do
+      expect { arr.bit_at(1, a: 1) }.to raise_error(ArgumentError)
+    end
+  end
+
+  describe '#bit_at!' do
+    before(:example) do
+      @arr = Bitary::Bitwarr.new([1, 2, 3], bpi: 8)
+    end
+
+    it 'sets the bit at given bit index' do
+      @arr.bit_at!(13)
+
+      expect(@arr.bit_at(13)).to eq(1)
+    end
+
+    it 'raises an IndexError if given bit index is out of bounds' do
+      expect { @arr.bit_at!(-1) }.to raise_error(IndexError)
+      expect { @arr.bit_at!(24) }.to raise_error(IndexError)
+    end
+
+    it 'raises an ArgumentError if given bit index is not Integer' do
+      expect { @arr.bit_at!('test') }.to raise_error(ArgumentError)
+    end
+
+    it 'raises an ArgumentError if more than 1 pos arg is given' do
+      expect { @arr.bit_at!(1, 2) }.to raise_error(ArgumentError)
+    end
+
+    it 'raises an ArgumentError if kwargs are given' do
+      expect { @arr.bit_at!(1, a: 1) }.to raise_error(ArgumentError)
+    end
+  end
+
+  describe '#unbit_at!' do
+    before(:example) do
+      @arr = Bitary::Bitwarr.new([1, 2, 3], bpi: 8)
+    end
+
+    it 'unsets the bit at given bit index' do
+      @arr.unbit_at!(14)
+
+      expect(@arr.bit_at(14)).to eq(0)
+    end
+
+    it 'raises an IndexError if given bit index is out of bounds' do
+      expect { @arr.unbit_at!(-1) }.to raise_error(IndexError)
+      expect { @arr.unbit_at!(24) }.to raise_error(IndexError)
+    end
+
+    it 'raises an ArgumentError if given bit index is not Integer' do
+      expect { @arr.unbit_at!('test') }.to raise_error(ArgumentError)
+    end
+
+    it 'raises an ArgumentError if more than 1 pos arg is given' do
+      expect { @arr.unbit_at!(1, 2) }.to raise_error(ArgumentError)
+    end
+
+    it 'raises an ArgumentError if kwargs are given' do
+      expect { @arr.unbit_at!(1, a: 1) }.to raise_error(ArgumentError)
+    end
+  end
 end
