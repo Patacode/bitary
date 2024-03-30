@@ -78,6 +78,10 @@ class Bitary
       operate_bit_at!(:unset, index)
     end
 
+    def each_byte(&)
+      decrease_items_size(@array, Bitary::BYTE, @bpi).each(&)
+    end
+
     private
 
     def init_bitsize(initial_data)
@@ -108,6 +112,25 @@ class Bitary
 
     def operate_bit_at!(operation, index)
       self[index] = operate_bit_at(operation, index)
+    end
+
+    def decrease_items_size(array, new_size, bpi)
+      array.each_with_object([]) do |item, acc|
+        acc.concat(explode_item(item, new_size, bpi))
+      end
+    end
+
+    def explode_item(item, new_size, bpi)
+      res = []
+      offset = bpi
+      mask = (2**new_size) - 1
+
+      while offset.positive?
+        offset -= new_size
+        res << ((item >> offset) & mask)
+      end
+
+      res
     end
   end
 end
