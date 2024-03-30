@@ -66,6 +66,18 @@ class Bitary
       bit_index / @bpi
     end
 
+    def bit_at(index)
+      operate_bit_at(:get, index)
+    end
+
+    def bit_at!(index)
+      operate_bit_at!(:set, index)
+    end
+
+    def unbit_at!(index)
+      operate_bit_at!(:unset, index)
+    end
+
     private
 
     def init_bitsize(initial_data)
@@ -83,6 +95,19 @@ class Bitary
     def check_bit_index(bit_index)
       raise ArgumentError unless bit_index.is_a?(Integer)
       raise IndexError if bit_index.negative? || bit_index >= @bitsize
+    end
+
+    def operate_bit_at(operation, index)
+      Factory
+        .make("Handler::#{operation.capitalize}", self[index])
+        .execute(
+          index: relative_bit_index(index),
+          size: bitsize(index)
+        )
+    end
+
+    def operate_bit_at!(operation, index)
+      self[index] = operate_bit_at(operation, index)
     end
   end
 end
