@@ -143,7 +143,7 @@ class Bitary
       def validate_required(user_kwargs, spec, expected_key)
         return unless spec[:required]
 
-        raise ArgumentError unless user_kwargs.key?(expected_key)
+        raise KeyError unless user_kwargs.key?(expected_key)
       end
 
       def validate_type(user_kwargs, spec, expected_key)
