@@ -21,7 +21,8 @@ class Bitary
       }.freeze
 
       def execute(**kwargs)
-        mask = (2**kwargs[:size]) - 1 - 2**(kwargs[:size] - kwargs[:index] - 1)
+        mask =
+          (2**kwargs[:size]) - 1 - (2**(kwargs[:size] - kwargs[:index] - 1))
 
         @value & mask
       end
