@@ -3,7 +3,7 @@
 class Bitary
   class Decorator
     class KwargsValidator < Bitary::Decorator
-      SPEC_KEYS = %i[required default type predicate]
+      SPEC_KEYS = %i[required default type predicate].freeze
 
       def initialize(wrappee, spec)
         super(wrappee) { |method| spec.key?(method) }
