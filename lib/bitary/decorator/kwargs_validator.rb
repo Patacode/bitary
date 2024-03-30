@@ -120,13 +120,9 @@ class Bitary
           validate_type(user_kwargs, loaded_spec, kwarg_name)
           predicates << loaded_spec[:predicate]
 
-          value =
-            if user_kwargs.key?(kwarg_name)
-              user_kwargs[kwarg_name]
-            else
-              loaded_spec[:default]
-            end
-          acc.merge(kwarg_name => value)
+          acc.merge(
+            kwarg_name => compute_value(user_kwargs, loaded_spec, kwarg_name)
+          )
         end.tap do |parsed_kwargs|
           predicates.each do |predicate|
             validate_predicate(parsed_kwargs, predicate)
@@ -162,6 +158,14 @@ class Bitary
         return if predicate[:callback].call(**parsed_kwargs)
 
         raise predicate[:error]
+      end
+
+      def compute_value(user_kwargs, spec, expected_key)
+        if user_kwargs.key?(expected_key)
+          user_kwargs[expected_key]
+        else
+          spec[:default]
+        end
       end
     end
   end
