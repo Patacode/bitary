@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'bitary/bitwarr'
+require 'bitary'
 
 RSpec.describe Bitary::Bitwarr do
   describe '::new' do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'bitary/size'
+require 'bitary'
 
 RSpec.describe Bitary::Size do
   it 'has BYTE constant referring to size of 8 bits' do

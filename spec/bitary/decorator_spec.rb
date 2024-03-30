@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'bitary/decorator'
+require 'bitary'
 
 RSpec.describe Bitary::Decorator do
   let(:fake_class) do

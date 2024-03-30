@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'bitary/factory'
+require 'bitary'
 
 class Bitary
   class Nest

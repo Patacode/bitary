@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'bitary/handler'
+require 'bitary'
 
 RSpec.describe Bitary::Handler do
   describe '::new' do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'bitary/handler/get'
+require 'bitary'
 
 RSpec.describe Bitary::Handler::Get do
   describe '#execute' do

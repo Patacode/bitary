@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'bitary/handler/unset'
+require 'bitary'
 
 RSpec.describe Bitary::Handler::Unset do
   describe '#execute' do
