@@ -359,4 +359,22 @@ RSpec.describe Bitary::Bitwarr do
       expect { @arr.unbit_at!(1, a: 1) }.to raise_error(ArgumentError)
     end
   end
+
+  describe '#each_byte' do
+    let(:arr) do
+      Bitary::Bitwarr.new([1, 2, 3], bpi: 16)
+    end
+
+    it "iterates over each internal array's byte" do
+      expect(arr.each_byte.to_a).to eq([0, 1, 0, 2, 0, 3])
+    end
+
+    it 'raises an ArgumentError if pos args are given' do
+      expect { arr.each_byte(1) }.to raise_error(ArgumentError)
+    end
+
+    it 'raises an ArgumentError if kwargs are given' do
+      expect { arr.each_byte(a: 1) }.to raise_error(ArgumentError)
+    end
+  end
 end
