@@ -9,7 +9,7 @@ RSpec.describe Bitary::Decorator::NonNilEnforcer do
         kwargs
       end
 
-      def run(**kwargs)
+      def run(**_kwargs)
         nil
       end
     end
