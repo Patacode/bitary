@@ -112,7 +112,7 @@ class Bitary
       def check_kwargs_against_spec(user_kwargs, method_spec)
         predicates = []
 
-        method_spec.reduce({}) do |acc, entry|
+        parsed_kwargs = method_spec.reduce({}) do |acc, entry|
           kwarg_name, kwarg_spec = entry
           loaded_spec = load_spec(kwarg_spec)
 
@@ -123,11 +123,13 @@ class Bitary
           acc.merge(
             kwarg_name => compute_value(user_kwargs, loaded_spec, kwarg_name)
           )
-        end.tap do |parsed_kwargs|
-          predicates.each do |predicate|
-            validate_predicate(parsed_kwargs, predicate)
-          end
         end
+
+        predicates.each do |predicate|
+          validate_predicate(parsed_kwargs, predicate)
+        end
+
+        parsed_kwargs
       end
 
       def load_spec(kwarg_spec)
