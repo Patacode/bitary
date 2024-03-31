@@ -2,11 +2,13 @@
 
 class Bitary
   class Decorator
-    class TruthyEnforcer < Bitary::Decorator::SingleMethod
-      protected
-
-      def postcall(resp)
-        resp or raise TypeError
+    class SingleMethod < Bitary::Decorator
+      class TruthyEnforcer < Bitary::Decorator::SingleMethod
+        protected
+  
+        def postcall(resp)
+          resp or raise TypeError
+        end
       end
     end
   end
