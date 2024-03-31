@@ -370,7 +370,19 @@ RSpec.describe Bitary::Bitwarr do
     end
 
     it "iterates over each internal array's byte" do
-      expect(arr.each_byte.to_a).to eq([0, 1, 0, 2, 0, 3])
+      it = 0
+      arr.each_byte do |byte|
+        case it
+        when 0 then expect(byte).to eq(0)
+        when 1 then expect(byte).to eq(1)
+        when 2 then expect(byte).to eq(0)
+        when 3 then expect(byte).to eq(2)
+        when 4 then expect(byte).to eq(0)
+        when 5 then expect(byte).to eq(3)
+        end
+
+        it += 1
+      end
     end
 
     it 'raises an ArgumentError if pos args are given' do

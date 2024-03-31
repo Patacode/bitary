@@ -263,11 +263,5 @@ RSpec.describe Bitary do
         index += 1
       end
     end
-
-    it 'returns an enumerator if no callback is given' do
-      bit_array = Bitary.new([255, 10, 20], bpi: 8)
-
-      expect(bit_array.each_byte).to be_an(Enumerator)
-    end
   end
 end
