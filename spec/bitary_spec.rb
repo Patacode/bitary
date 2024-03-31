@@ -86,6 +86,15 @@ RSpec.describe Bitary do
       expect(bit_array.to_a).to eq([0, 255, 0, 10, 0, 20])
     end
 
+    it 'handles decreasing with reduced last item' do
+      bit_array = Bitary.new(127)
+
+      bit_array[119] = 1
+      bit_array.bpi = 8 # last item will have 7 bits
+
+      expect(bit_array[119]).to eq(1)
+    end
+
     it 'raises an ArgumentError if value is not in [8, 16, 32, 64]' do
       bit_array = Bitary.new(10)
 
