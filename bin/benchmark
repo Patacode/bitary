@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'bundler/setup'
+require 'benchmark'
+require 'bitary'
+
+TIMES = 100
+
+def bench_code(times, name:)
+  puts "Executing [#{name}] #{times} times"
+
+  exec_times = []
+  TIMES.times do
+    bm = Benchmark.measure do
+      yield
+    end
+    exec_times << bm.real
+  end
+
+  average = exec_times.sum / TIMES * 1000
+  worst = exec_times.max * 1000
+  best = exec_times.min * 1000
+
+  puts format("Runtime of %.6f seconds on average (real)", average)
+  puts format("Runtime of %.6f seconds on worst (real)", worst)
+  puts format("Runtime of %.6f seconds on best (real)", best)
+end
+
+def setup
+  store = {}
+  yield store
+  store
+end
+
+data = setup do |store|
+  # setup code
+end
+
+# add benchmarks
