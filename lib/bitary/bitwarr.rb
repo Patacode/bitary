@@ -2,7 +2,7 @@
 
 class Bitary
   class Bitwarr
-    attr_reader :bpi
+    attr_reader :bpi, :bitsize
 
     def initialize(initial_data, bpi: Bitary::LONG)
       check_initial_data(initial_data)
@@ -21,21 +21,6 @@ class Bitary
       @array.respond_to?(method, include_all) || super
     end
 
-    def bitsize(bit_index = nil)
-      if bit_index.nil?
-        @bitsize
-      else
-        check_bit_index(bit_index)
-
-        last_index = @array.length - 1
-        if item_index(bit_index) == last_index
-          @bitsize - (last_index * @bpi)
-        else
-          @bpi
-        end
-      end
-    end
-
     def [](bit_index)
       @array[item_index(bit_index)]
     end
@@ -44,12 +29,6 @@ class Bitary
       raise ArgumentError unless value.is_a?(Integer)
 
       @array[item_index(bit_index)] = value
-    end
-
-    def relative_bit_index(bit_index)
-      check_bit_index(bit_index)
-
-      bit_index % @bpi
     end
 
     def item_index(bit_index)
@@ -127,7 +106,7 @@ class Bitary
       Factory
         .make("Handler::#{operation.capitalize}", self[index])
         .execute(
-          index: relative_bit_index(index),
+          index: index % @bpi,
           size: @bpi
         )
     end

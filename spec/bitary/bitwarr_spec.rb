@@ -106,39 +106,6 @@ RSpec.describe Bitary::Bitwarr do
 
       expect(bitwarr.bitsize).to eq(192)
     end
-
-    it 'returns the bit size of the item at given bit index' do
-      bitwarr = Bitary::Bitwarr.new(20, bpi: 8)
-
-      expect(bitwarr.bitsize(12)).to eq(8)
-      expect(bitwarr.bitsize(16)).to eq(4)
-    end
-
-    it 'raises an IndexError if item index is out of bounds' do
-      bitwarr = Bitary::Bitwarr.new(20, bpi: 8)
-
-      expect { bitwarr.bitsize(-1) }.to raise_error(IndexError)
-      expect { bitwarr.bitsize(20) }.to raise_error(IndexError)
-    end
-
-    it 'raises an ArgumentError if item index is not Integer but nil' do
-      bitwarr = Bitary::Bitwarr.new(20, bpi: 8)
-
-      expect(bitwarr.bitsize(nil)).to eq(20)
-      expect { bitwarr.bitsize('tt') }.to raise_error(ArgumentError)
-    end
-
-    it 'raises an ArgumentError if more than 1 pos arg is given' do
-      bitwarr = Bitary::Bitwarr.new(20, bpi: 8)
-
-      expect { bitwarr.bitsize(1, 2) }.to raise_error(ArgumentError)
-    end
-
-    it 'raises an ArgumentError if kwargs are given' do
-      bitwarr = Bitary::Bitwarr.new(20, bpi: 8)
-
-      expect { bitwarr.bitsize(1, a: 1) }.to raise_error(ArgumentError)
-    end
   end
 
   describe '#bpi' do
@@ -240,42 +207,6 @@ RSpec.describe Bitary::Bitwarr do
       bitwarr = Bitary::Bitwarr.new([1, 2, 3], bpi: 8)
 
       expect { bitwarr[1] = 'test' }.to raise_error(ArgumentError)
-    end
-  end
-
-  describe '#relative_bit_index' do
-    it 'returns the relative bit index given an item index' do
-      bitwarr = Bitary::Bitwarr.new([1, 2, 3], bpi: 8)
-
-      expect(bitwarr.relative_bit_index(12)).to eq(4)
-      expect(bitwarr.relative_bit_index(22)).to eq(6)
-    end
-
-    it 'raises an IndexError if given bit index is out of bounds' do
-      bitwarr = Bitary::Bitwarr.new([1, 2, 3], bpi: 8)
-
-      expect { bitwarr.relative_bit_index(-1) }.to raise_error(IndexError)
-      expect { bitwarr.relative_bit_index(24) }.to raise_error(IndexError)
-    end
-
-    it 'raises an ArgumentError if given bit index is not Integer' do
-      bitwarr = Bitary::Bitwarr.new([1, 2, 3], bpi: 8)
-
-      expect { bitwarr.relative_bit_index('tt') }.to raise_error(ArgumentError)
-    end
-
-    it 'raises an ArgumentError if more than 1 pos arg is given' do
-      bitwarr = Bitary::Bitwarr.new([1, 2, 3], bpi: 8)
-
-      expect { bitwarr.relative_bit_index(1, 2) }.to raise_error(ArgumentError)
-    end
-
-    it 'raises an ArgumentError if more than kwargs are given' do
-      bitwarr = Bitary::Bitwarr.new([1, 2, 3], bpi: 8)
-
-      expect { bitwarr.relative_bit_index(1, a: 1) }.to raise_error(
-        ArgumentError
-      )
     end
   end
 
