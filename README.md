@@ -29,11 +29,11 @@ require 'bitary'
 bit_array_sz = Bitary.new(128) # give an explicit size. Defaults to 64 bits used per item
 bit_array_ar = Bitary.new(
   [255, 10, 20],
-  bits_per_item: Bitary::BYTE # 8 bits
+  bpi: Bitary::BYTE # 8 bits
 ) # create based on some integer array
 
-bit_array_sz.bits_per_item # 64
-bit_array_ar.bits_per_item # 8
+bit_array_sz.bpi # 64
+bit_array_ar.bpi # 8
 
 bit_array_ar.size # 128
 bit_array_ar.size # 24
@@ -57,13 +57,13 @@ bit_array_ar.to_a # [127, 10, 20]
 bit_array_ar.to_s # "01111111 00001010 00010100"
 
 # increase/decrease bits used per item
-bit_array_ar.bits_per_item = Bitary::LONG # 64 bits
+bit_array_ar.bpi = Bitary::LONG # 64 bits
 bit_array_ar.to_a # [8_325_652]
 bit_array_ar.to_s # "0000000000000000000000000000000000000000011111110000101000010100"
 
-bit_array_sz.bits_per_item # 64
+bit_array_sz.bpi # 64
 bit_array_sz.to_a # [1_099_511_627_776, 0]
-bit_array_sz.bits_per_item = Bitary::INT # 32 bits
+bit_array_sz.bpi = Bitary::INT # 32 bits
 bit_array_sz.to_a # [256, 0, 0, 0]
 ```
 
