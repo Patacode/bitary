@@ -1,3 +1,8 @@
+## [0.1.4] - 2024-03-31
+
+- more refactoring of Bitary class
+- fix issue in getting/setting bits when size is not % 8 
+
 ## [0.1.3] - 2024-03-29
 
 - fix some missing require statements
