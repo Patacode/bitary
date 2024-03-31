@@ -123,7 +123,7 @@ class Bitary
         .make("Handler::#{operation.capitalize}", self[index])
         .execute(
           index: relative_bit_index(index),
-          size: bitsize(index)
+          size: @bpi
         )
     end
 
