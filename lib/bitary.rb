@@ -12,8 +12,6 @@ class Bitary
   include Size
 
   def initialize(initial_data, bpi: LONG)
-    check_bpi(bpi)
-
     @internal_array = Bitwarr.new(initial_data, bpi:)
   end
 
@@ -58,12 +56,6 @@ class Bitary
 
   def bpi
     @internal_array.bpi
-  end
-
-  private
-
-  def check_bpi(bpi)
-    raise ArgumentError unless [BYTE, SHORT, INT, LONG].include?(bpi)
   end
 
   alias at []
