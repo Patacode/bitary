@@ -372,13 +372,14 @@ RSpec.describe Bitary::Bitwarr do
     it "iterates over each internal array's byte" do
       it = 0
       arr.each_byte do |byte|
-        case it
-        when 0 then expect(byte).to eq(0)
-        when 1 then expect(byte).to eq(1)
-        when 2 then expect(byte).to eq(0)
-        when 3 then expect(byte).to eq(2)
-        when 4 then expect(byte).to eq(0)
-        when 5 then expect(byte).to eq(3)
+        if (it & 0x1) == 0
+          expect(byte).to eq(0)
+        else
+          case it
+          when 1 then expect(byte).to eq(1)
+          when 3 then expect(byte).to eq(2)
+          when 5 then expect(byte).to eq(3)
+          end
         end
 
         it += 1
