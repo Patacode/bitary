@@ -26,7 +26,11 @@ RSpec.describe Bitary::Bitwarr do
       expect { Bitary::Bitwarr.new('hello') }.to raise_error(ArgumentError)
     end
 
-    it 'raises an ArgumentError if given bpi is not Integer' do
+    it 'raises an ArgumentError if bpi not in [8, 16, 32, 64]' do
+      expect { Bitary::Bitwarr.new(128, bpi: 1) }.to raise_error(ArgumentError)
+      expect { Bitary::Bitwarr.new(128, bpi: 12) }.to raise_error(ArgumentError)
+      expect { Bitary::Bitwarr.new(128, bpi: 23) }.to raise_error(ArgumentError)
+      expect { Bitary::Bitwarr.new(128, bpi: 54) }.to raise_error(ArgumentError)
       expect { Bitary::Bitwarr.new(128, bpi: 'hello') }.to raise_error(
         ArgumentError
       )
