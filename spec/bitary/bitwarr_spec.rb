@@ -303,14 +303,11 @@ RSpec.describe Bitary::Bitwarr do
     it "iterates over each internal array's byte" do
       it = 0
       arr.each_byte do |byte|
-        if (it & 0x1) == 0
-          expect(byte).to eq(0)
-        else
-          case it
-          when 1 then expect(byte).to eq(1)
-          when 3 then expect(byte).to eq(2)
-          when 5 then expect(byte).to eq(3)
-          end
+        case it
+        when 0 then expect(byte).to eq(1)
+        when 1 then expect(byte).to eq(2)
+        when 2 then expect(byte).to eq(0)
+        when 3 then expect(byte).to eq(3)
         end
 
         it += 1
@@ -332,9 +329,7 @@ RSpec.describe Bitary::Bitwarr do
     end
 
     it 'converts the internal array to a binary string' do
-      expect(arr.to_s).to eq(
-        '0000000000000001 0000000000000010 0000000000000011'
-      )
+      expect(arr.to_s).to eq('0000000100000010 0000000000000011')
     end
 
     it 'raises an ArgumentError if pos args are given' do
@@ -360,53 +355,17 @@ RSpec.describe Bitary::Bitwarr do
       expect(arr.to_a).to eq([72_623_859_706_101_765])
     end
 
-    it 'increases the bit size of each item to desired bit size from 16' do
-      arr = Bitary::Bitwarr.new([1, 2, 3, 4, 5], bpi: 16)
-
-      arr.bpi = 32
-      expect(arr.to_a).to eq([65_538, 196_612, 5])
-
-      arr.bpi = 64
-      expect(arr.to_a).to eq([281_483_566_841_860, 5])
-    end
-
-    it 'increases the bit size of each item to desired bit size from 32' do
-      arr = Bitary::Bitwarr.new([1, 2, 3, 4, 5], bpi: 32)
-
-      arr.bpi = 64
-      expect(arr.to_a).to eq([4_294_967_298, 12_884_901_892, 5])
-    end
-
     it 'decreases the bit size of each item to desired bit size from 64' do
-      arr = Bitary::Bitwarr.new([4_294_967_298, 12_884_901_892, 5], bpi: 64)
+      arr = Bitary::Bitwarr.new([72_623_859_706_101_765], bpi: 64)
 
       arr.bpi = 32
-      expect(arr.to_a).to eq([1, 2, 3, 4, 0, 5])
+      expect(arr.to_a).to eq([16_909_060, 5])
 
       arr.bpi = 16
-      expect(arr.to_a).to eq([0, 1, 0, 2, 0, 3, 0, 4, 0, 0, 0, 5])
+      expect(arr.to_a).to eq([258, 772, 0, 5])
 
       arr.bpi = 8
-      expect(arr.to_a).to eq(
-        [0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 5]
-      )
-    end
-
-    it 'decreases the bit size of each item to desired bit size from 32' do
-      arr = Bitary::Bitwarr.new([65_538, 196_612, 5], bpi: 32)
-
-      arr.bpi = 16
-      expect(arr.to_a).to eq([1, 2, 3, 4, 0, 5])
-
-      arr.bpi = 8
-      expect(arr.to_a).to eq([0, 1, 0, 2, 0, 3, 0, 4, 0, 0, 0, 5])
-    end
-
-    it 'decreases the bit size of each item to desired bit size from 16' do
-      arr = Bitary::Bitwarr.new([258, 772, 5], bpi: 16)
-
-      arr.bpi = 8
-      expect(arr.to_a).to eq([1, 2, 3, 4, 0, 5])
+      expect(arr.to_a).to eq([1, 2, 3, 4, 0, 0, 0, 5])
     end
 
     it 'raises an ArgumentError if given bit size is not in [8, 16, 32, 64]' do

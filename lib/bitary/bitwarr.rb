@@ -8,9 +8,11 @@ class Bitary
       check_initial_data(initial_data)
       check_bpi(bpi)
 
-      @bpi = bpi
-      @bitsize = init_bitsize(initial_data)
-      @array = init_array(initial_data)
+      @bitsize = init_bitsize(initial_data, bpi)
+      @array = init_array(initial_data, @bitsize, bpi)
+      @bpi = init_bpi(initial_data, bpi)
+
+      self.bpi = bpi
     end
 
     def method_missing(method, *, &)
@@ -50,9 +52,10 @@ class Bitary
     end
 
     def each_byte
+      mask = (2**Bitary::BYTE) - 1
       @array.each do |item|
         (@bpi / Bitary::BYTE).times do |i|
-          byte = (item >> (@bpi - (Bitary::BYTE * (i + 1))))
+          byte = ((item >> (@bpi - (Bitary::BYTE * (i + 1)))) & mask)
           yield byte
         end
       end
@@ -64,6 +67,7 @@ class Bitary
 
     def bpi=(value)
       check_bpi(value)
+      return if value == @bpi
 
       update_items_size!(value)
 
@@ -72,15 +76,19 @@ class Bitary
 
     private
 
-    def init_bitsize(initial_data)
-      initial_data.is_a?(Array) ? @bpi * initial_data.length : initial_data
+    def init_bpi(initial_data, bpi)
+      initial_data.is_a?(Array) ? Bitary::BYTE : bpi
     end
 
-    def init_array(initial_data)
+    def init_bitsize(initial_data, bpi)
+      initial_data.is_a?(Array) ? bpi * initial_data.length : initial_data
+    end
+
+    def init_array(initial_data, bitsize, bpi)
       if initial_data.is_a?(Array)
         initial_data.clone
       else
-        [0] * (@bitsize / @bpi.to_f).ceil
+        [0] * (bitsize / bpi.to_f).ceil
       end
     end
 
