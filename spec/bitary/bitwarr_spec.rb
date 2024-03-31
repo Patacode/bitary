@@ -397,4 +397,78 @@ RSpec.describe Bitary::Bitwarr do
       expect { arr.to_s(a: 1) }.to raise_error(ArgumentError)
     end
   end
+
+  describe '#bpi=' do
+    it 'increases the bit size of each item to desired bit size from 8' do
+      arr = Bitary::Bitwarr.new([1, 2, 3, 4, 5], bpi: 8)
+
+      arr.bpi = 16
+      expect(arr.to_a).to eq([258, 772, 5])
+
+      arr.bpi = 32
+      expect(arr.to_a).to eq([16_909_060, 5])
+
+      arr.bpi = 64
+      expect(arr.to_a).to eq([72_623_859_706_101_765])
+    end
+
+    it 'increases the bit size of each item to desired bit size from 16' do
+      arr = Bitary::Bitwarr.new([1, 2, 3, 4, 5], bpi: 16)
+
+      arr.bpi = 32
+      expect(arr.to_a).to eq([65_538, 196_612, 5])
+
+      arr.bpi = 64
+      expect(arr.to_a).to eq([281_483_566_841_860, 5])
+    end
+
+    it 'increases the bit size of each item to desired bit size from 32' do
+      arr = Bitary::Bitwarr.new([1, 2, 3, 4, 5], bpi: 32)
+
+      arr.bpi = 64
+      expect(arr.to_a).to eq([4_294_967_298, 12_884_901_892, 5])
+    end
+
+    it 'decreases the bit size of each item to desired bit size from 64' do
+      arr = Bitary::Bitwarr.new([4_294_967_298, 12_884_901_892, 5], bpi: 64)
+
+      arr.bpi = 32
+      expect(arr.to_a).to eq([1, 2, 3, 4, 0, 5])
+
+      arr.bpi = 16
+      expect(arr.to_a).to eq([0, 1, 0, 2, 0, 3, 0, 4, 0, 0, 0, 5])
+
+      arr.bpi = 8
+      expect(arr.to_a).to eq(
+        [0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 5]
+      )
+    end
+
+    it 'decreases the bit size of each item to desired bit size from 32' do
+      arr = Bitary::Bitwarr.new([65_538, 196_612, 5], bpi: 32)
+
+      arr.bpi = 16
+      expect(arr.to_a).to eq([1, 2, 3, 4, 0, 5])
+
+      arr.bpi = 8
+      expect(arr.to_a).to eq([0, 1, 0, 2, 0, 3, 0, 4, 0, 0, 0, 5])
+    end
+
+    it 'decreases the bit size of each item to desired bit size from 16' do
+      arr = Bitary::Bitwarr.new([258, 772, 5], bpi: 16)
+
+      arr.bpi = 8
+      expect(arr.to_a).to eq([1, 2, 3, 4, 0, 5])
+    end
+
+    it 'raises an ArgumentError if given bit size is not in [8, 16, 32, 64]' do
+      arr = Bitary::Bitwarr.new([258, 772, 5], bpi: 16)
+
+      expect { arr.bpi = 9 }.to raise_error(ArgumentError)
+      expect { arr.bpi = 15 }.to raise_error(ArgumentError)
+      expect { arr.bpi = 31 }.to raise_error(ArgumentError)
+      expect { arr.bpi = 63 }.to raise_error(ArgumentError)
+      expect { arr.bpi = 'test' }.to raise_error(ArgumentError)
+    end
+  end
 end
