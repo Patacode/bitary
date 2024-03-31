@@ -12,7 +12,10 @@ class Bitary
     attr_reader :value
 
     def self.new(*arg, **kwargs)
-      Decorator::SingleMethod::KwargsValidator.new(super, { execute: self::SPEC })
+      Decorator::SingleMethod::KwargsValidator.new(
+        super,
+        { execute: self::SPEC }
+      )
     end
 
     def initialize(value)
