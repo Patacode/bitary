@@ -70,8 +70,13 @@ class Bitary
       operate_bit_at!(:unset, index)
     end
 
-    def each_byte(&)
-      decrease_items_size(@array, Bitary::BYTE, @bpi).each(&)
+    def each_byte
+      @array.each do |item|
+        (@bpi / Bitary::BYTE).times do |i|
+          byte = (item >> (@bpi - (Bitary::BYTE * (i + 1))))
+          yield byte
+        end
+      end
     end
 
     def to_s
