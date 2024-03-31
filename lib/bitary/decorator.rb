@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'decorator/kwargs_validator'
-require_relative 'decorator/non_nil_enforcer'
+require_relative 'decorator/single_method'
 
 class Bitary
   class Decorator
