@@ -6,7 +6,7 @@ require_relative 'mapper/obj_to_bit'
 class Bitary
   class Mapper
     def self.new(*arg, **kwargs)
-      Decorator::NonNilEnforcer.new(super, :map)
+      Decorator::SingleMethod::NonNilEnforcer.new(super, :map)
     end
 
     def map(value)
