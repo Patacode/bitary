@@ -12,7 +12,7 @@ class Bitary
   include Size
 
   def initialize(initial_data, bpi: LONG)
-    @internal_array = Bitwarr.new(initial_data, bpi:)
+    @internal_array = Factory.make('Bitwarr', initial_data, bpi:)
   end
 
   def [](index)
@@ -20,7 +20,7 @@ class Bitary
   end
 
   def []=(index, value)
-    case Mapper::ObjToBit.new.map(value)
+    case Factory.make('Mapper::ObjToBit').map(value)
     when 0 then @internal_array.unbit_at!(index)
     else @internal_array.bit_at!(index)
     end
