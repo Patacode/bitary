@@ -5,7 +5,7 @@ require 'bundler/setup'
 require 'benchmark'
 require 'bitary'
 
-TIMES = 100
+TIMES = 2
 
 def bench_code(times, name:)
   puts "Executing [#{name}] #{times} times"
@@ -16,11 +16,13 @@ def bench_code(times, name:)
       yield
     end
     exec_times << bm.real
+
+    puts format("Runtime of %.6f seconds (real)", bm.real)
   end
 
-  average = exec_times.sum / TIMES * 1000
-  worst = exec_times.max * 1000
-  best = exec_times.min * 1000
+  average = exec_times.sum / TIMES
+  worst = exec_times.max
+  best = exec_times.min
 
   puts format("Runtime of %.6f seconds on average (real)", average)
   puts format("Runtime of %.6f seconds on worst (real)", worst)
