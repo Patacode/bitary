@@ -23,12 +23,6 @@ class Bitary
       @array.respond_to?(method, include_all) || super
     end
 
-    def bpi=(value)
-      raise ArgumentError unless value.is_a?(Integer)
-
-      @bpi = value
-    end
-
     def bitsize(bit_index = nil)
       if bit_index.nil?
         @bitsize
@@ -86,6 +80,14 @@ class Bitary
       @array.map { |item| format("%0#{@bpi}d", item.to_s(2)) }.join(' ')
     end
 
+    def bpi=(value)
+      check_bpi(value)
+
+      update_items_size!(value)
+
+      @bpi = value
+    end
+
     private
 
     def init_bitsize(initial_data)
@@ -105,6 +107,15 @@ class Bitary
       raise IndexError if bit_index.negative? || bit_index >= @bitsize
     end
 
+    def check_bpi(bpi)
+      raise ArgumentError unless [
+        Bitary::BYTE,
+        Bitary::SHORT,
+        Bitary::INT,
+        Bitary::LONG
+      ].include?(bpi)
+    end
+
     def operate_bit_at(operation, index)
       Factory
         .make("Handler::#{operation.capitalize}", self[index])
@@ -118,10 +129,44 @@ class Bitary
       self[index] = operate_bit_at(operation, index)
     end
 
+    def update_items_size!(value)
+      if value > @bpi
+        increase_items_size!(value)
+      else
+        decrease_items_size!(value)
+      end
+    end
+
+    def increase_items_size(array, new_size, bpi)
+      processed_bits = 0
+      res = array.each_with_object([0]) do |value, acc|
+        offset = bpi
+        if processed_bits >= new_size
+          offset = 0
+          acc << 0
+          processed_bits = 0
+        end
+  
+        acc[-1] = Factory.make('Handler::Append', acc[-1]).execute(
+          offset:,
+          value:
+        )
+        processed_bits += bpi
+      end
+    end
+
+    def increase_items_size!(value)
+      @array = increase_items_size(@array, value, @bpi)
+    end
+
     def decrease_items_size(array, new_size, bpi)
       array.each_with_object([]) do |item, acc|
         acc.concat(explode_item(item, new_size, bpi))
       end
+    end
+
+    def decrease_items_size!(value)
+      @array = decrease_items_size(@array, value, @bpi)
     end
 
     def explode_item(item, new_size, bpi)
