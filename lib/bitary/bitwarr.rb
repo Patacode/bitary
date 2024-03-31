@@ -51,13 +51,9 @@ class Bitary
       operate_bit_at!(:unset, index)
     end
 
-    def each_byte
-      mask = (2**Bitary::BYTE) - 1
+    def each_byte(&proc)
       @array.each do |item|
-        (@bpi / Bitary::BYTE).times do |i|
-          byte = ((item >> (@bpi - (Bitary::BYTE * (i + 1)))) & mask)
-          yield byte
-        end
+        explode_item(item, Bitary::BYTE, @bpi, &proc)
       end
     end
 
@@ -155,7 +151,9 @@ class Bitary
 
     def decrease_items_size(array, new_size, bpi)
       array.each_with_object([]) do |item, acc|
-        acc.concat(explode_item(item, new_size, bpi))
+        explode_item(item, new_size, bpi) do |new_item|
+          acc << new_item
+        end
       end
     end
 
@@ -164,16 +162,13 @@ class Bitary
     end
 
     def explode_item(item, new_size, bpi)
-      res = []
       offset = bpi
       mask = (2**new_size) - 1
 
       while offset.positive?
         offset -= new_size
-        res << ((item >> offset) & mask)
+        yield ((item >> offset) & mask)
       end
-
-      res
     end
   end
 end
