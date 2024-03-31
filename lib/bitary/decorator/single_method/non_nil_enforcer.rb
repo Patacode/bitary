@@ -5,7 +5,7 @@ class Bitary
     class SingleMethod < Bitary::Decorator
       class NonNilEnforcer < Bitary::Decorator::SingleMethod
         protected
-  
+
         def postcall(resp)
           (resp.nil? and raise TypeError) || resp
         end
