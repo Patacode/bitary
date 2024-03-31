@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require_relative 'single_method/non_nil_enforcer'
+require_relative 'single_method/truthy_enforcer'
+
 class Bitary
   class Decorator
     class SingleMethod < Bitary::Decorator
@@ -17,6 +20,3 @@ class Bitary
     end
   end
 end
-
-require_relative 'single_method/non_nil_enforcer'
-require_relative 'single_method/truthy_enforcer'
