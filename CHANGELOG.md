@@ -1,3 +1,7 @@
+## [0.1.6] - 2024-03-31
+
+- enhance global perf by remove useless and heavy error handling
+
 ## [0.1.5] - 2024-03-31
 
 - enhance performance of #each_byte (4 seconds faster on average)
