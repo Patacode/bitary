@@ -1,3 +1,7 @@
+## [0.1.5] - 2024-03-31
+
+- enhance performance of #each_byte (4 seconds faster on average)
+
 ## [0.1.4] - 2024-03-31
 
 - more refactoring of Bitary class
