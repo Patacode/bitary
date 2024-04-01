@@ -56,7 +56,7 @@ RSpec.describe Bitary::Bitwarr do
     it 'returns the bit size of the Bitwarr when built from an array' do
       bitwarr = Bitary::Bitwarr.new([1, 2, 3])
 
-      expect(bitwarr.bitsize).to eq(192)
+      expect(bitwarr.bitsize).to eq(24)
     end
   end
 

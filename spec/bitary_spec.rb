@@ -50,7 +50,7 @@ RSpec.describe Bitary do
       bit_array3 = Bitary.new(100, bpi: 64)
 
       expect(bit_array1.size).to eq(10)
-      expect(bit_array2.size).to eq(192)
+      expect(bit_array2.size).to eq(24)
       expect(bit_array3.size).to eq(100)
     end
   end
