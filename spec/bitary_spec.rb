@@ -2,6 +2,24 @@
 
 require 'bitary'
 
+RSpec.shared_examples :bit_access do |method|
+  let(:instance) { Bitary.new(27, bytes: [1, 2, 3], bpi: 8) }
+
+  it 'gets the bit at given bit index' do
+    expect(instance.send(method, 23)).to eq(1)
+    expect(instance.send(method, 24)).to eq(0)
+  end
+
+  it 'raises an IndexError if given index is out of bounds' do
+    expect { instance.send(method, -1) }.to raise_error(IndexError)
+    expect { instance.send(method, 27) }.to raise_error(IndexError)
+  end
+
+  it 'raises an ArgumentError if given index is not an Integer' do
+    expect { instance.send(method, 'invalid') }.to raise_error(ArgumentError)
+  end
+end
+
 RSpec.describe Bitary do
   it 'has BYTE constant referring to size of 8 bits' do
     expect(Bitary::BYTE).to eq(8)
@@ -20,248 +38,258 @@ RSpec.describe Bitary do
   end
 
   describe '::new' do
-    it 'returns a new bit array of the desired size' do
-      Bitary.new(10)
-    end
-
-    it 'returns a new bit array based on some given integer array' do
-      Bitary.new([255, 10, 20])
-    end
-
-    it 'returns a new bit array using some given element size in bits' do
-      Bitary.new(100, bpi: 64)
-    end
-
-    it 'raises an ArgumentError if bpi is not in [8, 16, 32, 64]' do
-      expect { Bitary.new(100, bpi: 9) }.to raise_error(
-        ArgumentError
+    it 'returns a new instance' do
+      expect(Bitary.new(128, bytes: [255, 10, 20], bpi: 16)).to be_instance_of(
+        Bitary
       )
+    end
 
-      expect { Bitary.new(100, bpi: 24) }.to raise_error(
-        ArgumentError
-      )
+    it 'raises an ArgumentError if initial bit capacity is 0' do
+      expect { Bitary.new(0) }.to raise_error(ArgumentError)
+    end
+
+    it 'raises an ArgumentError if initial bit capacity is negative' do
+      expect { Bitary.new(-5) }.to raise_error(ArgumentError)
+    end
+
+    it 'raises an ArgumentError if bpi is an Integer not in [8, 16, 32, 64]' do
+      expect { Bitary.new(100, bpi: 9) }.to raise_error(ArgumentError)
+    end
+
+    it 'raises an ArgumentError if bpi is not an Integer' do
+      expect { Bitary.new(100, bpi: 'invalid') }.to raise_error(ArgumentError)
+    end
+
+    it 'raises an ArgumentError if more than 1 pos args are given' do
+      expect { Bitary.new(100, 2) }.to raise_error(ArgumentError)
+    end
+
+    it 'raise an ArgumentError if kwargs other than bpi and bytes are given' do
+      expect { Bitary.new(invalid: 'kwarg') }.to raise_error(ArgumentError)
+    end
+
+    it(
+      'raises an ArgumentError if initial bit capacity is not an Integer ' \
+      'but nil'
+    ) do
+      expect { Bitary.new('invalid') }.to raise_error(ArgumentError)
+    end
+
+    it 'raises an ArgumentError if byte array is not an Array but nil' do
+      expect { Bitary.new(bytes: { invalid: 1 }) }.to raise_error(ArgumentError)
     end
   end
 
-  describe '#size' do
-    it 'returns the size of the bit array, in bits' do
-      bit_array1 = Bitary.new(10)
-      bit_array2 = Bitary.new([255, 10, 20])
-      bit_array3 = Bitary.new(100, bpi: 64)
+  describe '#bits' do
+    let(:instance) { Bitary.new(73) }
 
-      expect(bit_array1.size).to eq(10)
-      expect(bit_array2.size).to eq(24)
-      expect(bit_array3.size).to eq(100)
+    it 'returns the number of bits used by the bit array' do
+      expect(instance.bits).to eq(73)
+    end
+
+    it 'raises an ArgumentError if pos args are given' do
+      expect { instance.bits(1) }.to raise_error(ArgumentError)
+    end
+
+    it 'raises an ArgumentError if kwargs are given' do
+      expect { instance.bits(a: 1) }.to raise_error(ArgumentError)
     end
   end
 
   describe '#bpi' do
-    it 'returns the number of bits used by each item in the internal array' do
-      bit_array = Bitary.new(10, bpi: 32)
+    let(:instance) { Bitary.new(bpi: 8) }
 
-      expect(bit_array.bpi).to eq(32)
+    it 'returns the number of bits used per item' do
+      expect(instance.bpi).to eq(8)
     end
 
-    it 'returns a default value of 64' do
-      bit_array = Bitary.new(10)
+    it 'raises an ArgumentError if pos args are given' do
+      expect { instance.bpi(1) }.to raise_error(ArgumentError)
+    end
 
-      expect(bit_array.bpi).to eq(64)
+    it 'raises an ArgumentError if kwargs are given' do
+      expect { instance.bpi(a: 1) }.to raise_error(ArgumentError)
     end
   end
 
   describe '#bpi=' do
-    it 'updates the bits used per item by merging existing ones (increase)' do
-      bit_array = Bitary.new([255, 10, 20], bpi: 16)
+    let(:instance) { Bitary.new(bytes: [1, 2, 3, 4, 5], bpi: 32) }
 
-      bit_array.bpi = 64
+    it 'increases the bits used per item when value is > than actual bpi' do
+      instance.bpi = 32
 
-      expect(bit_array.to_a).to eq([18_377_523_219_671_285_760])
+      expect(instance.to_a).to eq([16_909_060, 83_886_080])
     end
 
-    it 'updates the bits used per item by merging existing ones (decrease)' do
-      bit_array = Bitary.new([255, 10, 20], bpi: 16)
+    it 'decreases the bits used per item when value is < than actual bpi' do
+      instance.bpi = 16
 
-      bit_array.bpi = 8
-
-      expect(bit_array.to_a).to eq([255, 10, 20, 0])
+      expect(instance.to_a).to eq([258, 772, 1_280, 0])
     end
 
-    it 'handles decreasing with reduced last item' do
-      bit_array = Bitary.new(127)
-
-      bit_array[119] = 1
-      bit_array.bpi = 8 # last item will have 7 bits
-
-      expect(bit_array[119]).to eq(1)
+    it(
+      'raises an ArgumentError if value is an Integer not in [8, 16, 32, 64]'
+    ) do
+      expect { instance.bpi = 40 }.to raise_error(ArgumentError)
     end
 
-    it 'raises an ArgumentError if value is not in [8, 16, 32, 64]' do
-      bit_array = Bitary.new(10)
-
-      expect { bit_array.bpi = 40 }.to raise_error(ArgumentError)
-      expect { bit_array.bpi = 65 }.to raise_error(ArgumentError)
+    it 'raises an ArgumentError if value is not an Integer' do
+      expect { instance.bpi = 'invalid' }.to raise_error(ArgumentError)
     end
   end
 
   describe '#to_a' do
-    it 'returns accurately the internal array backed by the bit array' do
-      bit_array1 = Bitary.new(10)
-      bit_array2 = Bitary.new([255, 10, 20])
-      bit_array3 = Bitary.new([300, 10, 20], bpi: 16)
-      bit_array4 = Bitary.new(16, bpi: 8)
+    let(:instance) { Bitary.new(bytes: [1, 2, 3, 4, 5], bpi: 32) }
 
-      expect(bit_array1.to_a).to eq([0])
-      expect(bit_array2.to_a).to eq([18_377_523_219_671_285_760])
-      expect(bit_array3.to_a).to eq([76_810, 5_120])
-      expect(bit_array4.to_a).to eq([0, 0])
+    it 'returns a shallow copy of internal array' do
+      clone = instance.to_a
+      clone[0] = 33
+
+      expect(instance.to_a).to eq([16_909_060, 83_886_080])
     end
 
-    it 'returns a clone of the internal array backed by the bit array' do
-      bit_array = Bitary.new(10)
+    it 'raises an ArgumentError if pos args are given' do
+      expect { instance.to_a(1) }.to raise_error(ArgumentError)
+    end
 
-      bit_array.to_a[0] = 33
-
-      expect(bit_array.to_a).to eq([0])
+    it 'raises an ArgumentError if kwargs are given' do
+      expect { instance.to_a(a: 1) }.to raise_error(ArgumentError)
     end
   end
 
   describe '#[]' do
-    it 'returns the value of the bit at given index' do
-      bit_array = Bitary.new([148, 145, 5], bpi: 8)
-
-      expect(bit_array[0]).to eq(1)
-      expect(bit_array[8]).to eq(1)
-      expect(bit_array[14]).to eq(0)
-      expect(bit_array[23]).to eq(1)
-    end
-
-    it 'raises an IndexError if given index is out of bounds' do
-      bit_array = Bitary.new(10)
-
-      expect { bit_array[-1] }.to raise_error(IndexError)
-      expect { bit_array[10] }.to raise_error(IndexError)
-    end
+    include_examples :bit_access, :[]
   end
 
   describe '#[]=' do
+    let(:instance) { Bitary.new(bytes: [148, 145, 5], bpi: 8) }
+
     it 'sets the bit at given index to 1 if given value is truthy but 0' do
-      bit_array = Bitary.new([148, 145, 5], bpi: 8)
+      instance[1] = []
+      instance[14] = true
+      instance[15] = 0
+      instance[9] = 1
 
-      bit_array[1] = []
-      bit_array[14] = true
-      bit_array[15] = 0
-      bit_array[9] = 1
-
-      expect(bit_array[1]).to eq(1)
-      expect(bit_array[14]).to eq(1)
-      expect(bit_array[15]).to eq(0)
-      expect(bit_array[9]).to eq(1)
+      expect(instance[1]).to eq(1)
+      expect(instance[14]).to eq(1)
+      expect(instance[15]).to eq(0)
+      expect(instance[9]).to eq(1)
     end
 
     it 'sets the bit at given index to 0 if given value is falsy or 0' do
-      bit_array = Bitary.new([148, 145, 5], bpi: 8)
+      instance[0] = nil
+      instance[3] = false
+      instance[16] = 0
 
-      bit_array[0] = nil
-      bit_array[3] = false
-      bit_array[16] = 0
-
-      expect(bit_array[0]).to eq(0)
-      expect(bit_array[3]).to eq(0)
-      expect(bit_array[16]).to eq(0)
+      expect(instance[0]).to eq(0)
+      expect(instance[3]).to eq(0)
+      expect(instance[16]).to eq(0)
     end
 
     it 'raises an IndexError if given index is out of bounds' do
-      bit_array = Bitary.new(10)
+      expect { instance[-1] = 1 }.to raise_error(IndexError)
+      expect { instance[24] = 0 }.to raise_error(IndexError)
+    end
 
-      expect { bit_array[-1] = 1 }.to raise_error(IndexError)
-      expect { bit_array[10] = 0 }.to raise_error(IndexError)
+    it 'raises an ArgumentError if given index is not an Integer' do
+      expect { instance['invalid'] = 3 }.to raise_error(ArgumentError)
     end
   end
 
   describe '#at' do
-    it 'returns the value of the bit at given index (acts as #[])' do
-      bit_array = Bitary.new([148, 145, 5], bpi: 8)
-
-      expect(bit_array.at(0)).to eq(1)
-      expect(bit_array.at(8)).to eq(1)
-      expect(bit_array.at(14)).to eq(0)
-      expect(bit_array.at(23)).to eq(1)
-    end
-
-    it 'raises an IndexError if given index is out of bounds (acts as #[])' do
-      bit_array = Bitary.new(10)
-
-      expect { bit_array.at(-1) }.to raise_error(IndexError)
-      expect { bit_array.at(10) }.to raise_error(IndexError)
-    end
+    include_examples :bit_access, :at
   end
 
   describe '#set' do
-    it 'sets the bit at given index (to 1)' do
-      bit_array = Bitary.new([148, 145, 5], bpi: 8)
+    let(:instance) { Bitary.new(bytes: [148, 145, 5], bpi: 8) }
 
-      bit_array.set(1)
-      bit_array.set(14)
-      bit_array.set(15)
-      bit_array.set(9)
+    it 'sets the bit at given index' do
+      instance.set(1)
+      instance.set(14)
+      instance.set(15)
+      instance.set(9)
 
-      expect(bit_array[1]).to eq(1)
-      expect(bit_array[14]).to eq(1)
-      expect(bit_array[15]).to eq(1)
-      expect(bit_array[9]).to eq(1)
+      expect(instance[1]).to eq(1)
+      expect(instance[14]).to eq(1)
+      expect(instance[15]).to eq(1)
+      expect(instance[9]).to eq(1)
     end
 
     it 'raises an IndexError if given index is out of bounds' do
-      bit_array = Bitary.new(10)
+      expect { instance.set(-1) }.to raise_error(IndexError)
+      expect { instance.set(24) }.to raise_error(IndexError)
+    end
 
-      expect { bit_array.set(-1) }.to raise_error(IndexError)
-      expect { bit_array.set(10) }.to raise_error(IndexError)
+    it 'raises an ArgumentError if given index is not an Integer' do
+      expect { instance.set('invalid') }.to raise_error(ArgumentError)
     end
   end
 
   describe '#unset' do
+    let(:instance) { Bitary.new(bytes: [148, 145, 5], bpi: 8) }
+
     it 'unsets the bit at given index (to 0)' do
-      bit_array = Bitary.new([148, 145, 5], bpi: 8)
+      instance.unset(0)
+      instance.unset(3)
+      instance.unset(5)
 
-      bit_array.unset(0)
-      bit_array.unset(3)
-      bit_array.unset(5)
-
-      expect(bit_array[0]).to eq(0)
-      expect(bit_array[3]).to eq(0)
-      expect(bit_array[5]).to eq(0)
+      expect(instance[0]).to eq(0)
+      expect(instance[3]).to eq(0)
+      expect(instance[5]).to eq(0)
     end
 
     it 'raises an IndexError if given index is out of bounds' do
-      bit_array = Bitary.new(10)
-
-      expect { bit_array.unset(-1) }.to raise_error(IndexError)
-      expect { bit_array.unset(10) }.to raise_error(IndexError)
+      expect { instance.unset(-1) }.to raise_error(IndexError)
+      expect { instance.unset(24) }.to raise_error(IndexError)
     end
-  end
 
-  describe '#to_s' do
-    it 'returns the binary string representation of the whole bit array' do
-      bit_array1 = Bitary.new([148, 145, 5], bpi: 8)
-
-      expect(bit_array1.to_s).to eq('10010100 10010001 00000101')
+    it 'raises an ArgumentError if given index is not an Integer' do
+      expect { instance.unset('invalid') }.to raise_error(ArgumentError)
     end
   end
 
   describe '#each_byte' do
-    it 'iterates over each byte of the bit array' do
-      bit_array = Bitary.new([255, 10, 20], bpi: 8)
+    let(:instance) { Bitary.new(bytes: [255, 10, 20], bpi: 8) }
 
-      index = 0
-      bit_array.each_byte do |byte|
-        case index
+    it 'iterates over each byte of the bit array' do
+      counter = 0
+      instance.each_byte do |byte|
+        case counter
         when 0 then expect(byte).to eq(255)
         when 1 then expect(byte).to eq(10)
         when 2 then expect(byte).to eq(20)
         end
 
-        index += 1
+        counter += 1
       end
+
+      expect(counter).to eq(3)
+    end
+
+    it 'raises an ArgumentError if pos args are provided' do
+      expect { instance.each_byte(->(byte) { p byte }) }.to raise_error(
+        ArgumentError
+      )
+    end
+
+    it 'raises an ArgumentError if kwargs are provided' do
+      expect { instance.each_byte(a: 1) }.to raise_error(ArgumentError)
+    end
+  end
+
+  describe '#to_s' do
+    let(:instance) { Bitary.new(bytes: [148, 145, 5], bpi: 8) }
+
+    it 'converts the bit array to a binary string' do
+      expect(instance.to_s).to eq('10010100 10010001 00000101')
+    end
+
+    it 'raises an ArgumentError if pos args are given' do
+      expect { instance.to_s(16) }.to raise_error(ArgumentError)
+    end
+
+    it 'raises an ArgumentError if kwargs are given' do
+      expect { instance.to_s(a: 1) }.to raise_error(ArgumentError)
     end
   end
 end
