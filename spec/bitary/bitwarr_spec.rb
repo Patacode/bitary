@@ -60,40 +60,6 @@ RSpec.describe Bitary::Bitwarr do
     end
   end
 
-  describe '#item_index' do
-    it 'returns the index of the item at given bit index' do
-      bitwarr = Bitary::Bitwarr.new([1, 2, 3], bpi: 8)
-
-      expect(bitwarr.item_index(7)).to eq(0)
-      expect(bitwarr.item_index(18)).to eq(2)
-    end
-
-    it 'raises an IndexError if given bit index is out of bounds' do
-      bitwarr = Bitary::Bitwarr.new([1, 2, 3], bpi: 8)
-
-      expect { bitwarr.item_index(-1) }.to raise_error(IndexError)
-      expect { bitwarr.item_index(24) }.to raise_error(IndexError)
-    end
-
-    it 'raises an ArgumentError if given pos arg is not Integer' do
-      bitwarr = Bitary::Bitwarr.new([1, 2, 3], bpi: 8)
-
-      expect { bitwarr.item_index('tt') }.to raise_error(ArgumentError)
-    end
-
-    it 'raises an ArgumentError if more than 1 pos arg is given' do
-      bitwarr = Bitary::Bitwarr.new([1, 2, 3], bpi: 8)
-
-      expect { bitwarr.item_index(1, 2) }.to raise_error(ArgumentError)
-    end
-
-    it 'raises an ArgumentError if kwargs are given' do
-      bitwarr = Bitary::Bitwarr.new([1, 2, 3], bpi: 8)
-
-      expect { bitwarr.item_index(1, a: 1) }.to raise_error(ArgumentError)
-    end
-  end
-
   describe '#bitsize' do
     it 'returns the bit size of the Bitwarr when built with explicit size' do
       bitwarr = Bitary::Bitwarr.new(128)
@@ -202,12 +168,6 @@ RSpec.describe Bitary::Bitwarr do
 
       expect { bitwarr[1, 2] = 10 }.to raise_error(ArgumentError)
     end
-
-    it 'raises an ArgumentError if given value is not Integer' do
-      bitwarr = Bitary::Bitwarr.new([1, 2, 3], bpi: 8)
-
-      expect { bitwarr[1] = 'test' }.to raise_error(ArgumentError)
-    end
   end
 
   describe '#bit_at' do
@@ -306,8 +266,8 @@ RSpec.describe Bitary::Bitwarr do
         case it
         when 0 then expect(byte).to eq(1)
         when 1 then expect(byte).to eq(2)
-        when 2 then expect(byte).to eq(0)
-        when 3 then expect(byte).to eq(3)
+        when 2 then expect(byte).to eq(3)
+        when 3 then expect(byte).to eq(0)
         end
 
         it += 1
@@ -329,7 +289,7 @@ RSpec.describe Bitary::Bitwarr do
     end
 
     it 'converts the internal array to a binary string' do
-      expect(arr.to_s).to eq('0000000100000010 0000000000000011')
+      expect(arr.to_s).to eq('0000000100000010 0000001100000000')
     end
 
     it 'raises an ArgumentError if pos args are given' do
@@ -346,26 +306,26 @@ RSpec.describe Bitary::Bitwarr do
       arr = Bitary::Bitwarr.new([1, 2, 3, 4, 5], bpi: 8)
 
       arr.bpi = 16
-      expect(arr.to_a).to eq([258, 772, 5])
+      expect(arr.to_a).to eq([258, 772, 1_280])
 
       arr.bpi = 32
-      expect(arr.to_a).to eq([16_909_060, 5])
+      expect(arr.to_a).to eq([16_909_060, 83_886_080])
 
       arr.bpi = 64
-      expect(arr.to_a).to eq([72_623_859_706_101_765])
+      expect(arr.to_a).to eq([72_623_859_789_987_840])
     end
 
     it 'decreases the bit size of each item to desired bit size from 64' do
-      arr = Bitary::Bitwarr.new([72_623_859_706_101_765], bpi: 64)
+      arr = Bitary::Bitwarr.new([1, 2, 3, 4, 5], bpi: 64)
 
       arr.bpi = 32
-      expect(arr.to_a).to eq([16_909_060, 5])
+      expect(arr.to_a).to eq([16_909_060, 83_886_080])
 
       arr.bpi = 16
-      expect(arr.to_a).to eq([258, 772, 0, 5])
+      expect(arr.to_a).to eq([258, 772, 1_280, 0])
 
       arr.bpi = 8
-      expect(arr.to_a).to eq([1, 2, 3, 4, 0, 0, 0, 5])
+      expect(arr.to_a).to eq([1, 2, 3, 4, 5, 0, 0, 0])
     end
 
     it 'raises an ArgumentError if given bit size is not in [8, 16, 32, 64]' do

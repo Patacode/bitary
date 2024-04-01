@@ -75,7 +75,7 @@ RSpec.describe Bitary do
 
       bit_array.bpi = 64
 
-      expect(bit_array.to_a).to eq([4_278_845_460])
+      expect(bit_array.to_a).to eq([18_377_523_219_671_285_760])
     end
 
     it 'updates the bits used per item by merging existing ones (decrease)' do
@@ -83,7 +83,7 @@ RSpec.describe Bitary do
 
       bit_array.bpi = 8
 
-      expect(bit_array.to_a).to eq([255, 10, 0, 20])
+      expect(bit_array.to_a).to eq([255, 10, 20, 0])
     end
 
     it 'handles decreasing with reduced last item' do
@@ -111,8 +111,8 @@ RSpec.describe Bitary do
       bit_array4 = Bitary.new(16, bpi: 8)
 
       expect(bit_array1.to_a).to eq([0])
-      expect(bit_array2.to_a).to eq([16_714_260])
-      expect(bit_array3.to_a).to eq([76_810, 20])
+      expect(bit_array2.to_a).to eq([18_377_523_219_671_285_760])
+      expect(bit_array3.to_a).to eq([76_810, 5_120])
       expect(bit_array4.to_a).to eq([0, 0])
     end
 
