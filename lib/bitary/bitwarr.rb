@@ -109,6 +109,13 @@ class Bitary
       value > @bpi ? increase_items_size!(value) : decrease_items_size!(value)
     end
 
+    def append_bits(item, bpi, addend)
+      Factory.make('Handler::Append', item).execute(
+        offset: bpi,
+        value: addend
+      )
+    end
+
     def increase_items_size(array, new_size, bpi)
       processed_bits = 0
       res = array.each_with_object([0]) do |item, acc|
@@ -117,19 +124,12 @@ class Bitary
           processed_bits = 0
         end
 
-        acc[-1] = Factory.make('Handler::Append', acc[-1]).execute(
-          offset: bpi,
-          value: item
-        )
-
+        acc[-1] = append_bits(acc[-1], bpi, item)
         processed_bits += bpi
       end
 
       while processed_bits < new_size
-        res[-1] = Factory.make('Handler::Append', res[-1]).execute(
-          offset: bpi,
-          value: 0
-        )
+        res[-1] = append_bits(res[-1], bpi, 0)
         processed_bits += bpi
       end
 
