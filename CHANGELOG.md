@@ -1,3 +1,7 @@
+## [0.1.8] - 2024-04-01
+
+- inline bit operations to regain original perf
+
 ## [0.1.7] - 2024-04-01
 
 - loads of refactoring and perf improvements
