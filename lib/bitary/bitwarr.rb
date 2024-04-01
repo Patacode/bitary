@@ -13,14 +13,19 @@ class Bitary
     end
 
     def [](bit_index) = @array[item_index(bit_index)]
-    def bit_at(index) = operate_bit_at(:get, index)
-    def bit_at!(index) = operate_bit_at!(:set, index)
-    def unbit_at!(index) = operate_bit_at!(:unset, index)
-    def to_s = @array.map { |item| to_binstr(item) }.join(' ')
 
     def []=(bit_index, value)
       @array[item_index(bit_index)] = value
     end
+
+    def bit_at(index) = (self[index] >> (@bpi - (index % @bpi) - 1)) & 0x1
+    def bit_at!(index) = self[index] |= 2**(@bpi - (index % @bpi) - 1)
+
+    def unbit_at!(index)
+      self[index] &= ((2**@bpi) - 1 - (2**(@bpi - (index % @bpi) - 1)))
+    end
+
+    def to_s = @array.map { |item| to_binstr(item) }.join(' ')
 
     def each_byte(&proc)
       @array.each do |item|
