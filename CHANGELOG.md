@@ -1,3 +1,7 @@
+## [0.1.9] - 2024-04-01
+
+- boost perf even more by inlining mapping operations
+
 ## [0.1.8] - 2024-04-01
 
 - inline bit operations to regain original perf
