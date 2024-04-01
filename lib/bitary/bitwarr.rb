@@ -4,9 +4,11 @@ class Bitary
   class Bitwarr
     attr_reader :bpi, :bitsize
 
-    def initialize(initial_data, bpi: Bitary::LONG)
-      @bitsize = init_bitsize(initial_data, bpi)
-      @array = init_array(initial_data, @bitsize, bpi)
+    DEFAULT_INIT_CAP = Bitary::Size::LONG * 2
+
+    def initialize(init_cap = nil, bytes: nil, bpi: Bitary::LONG)
+      @array = init_array(init_cap, bytes, bpi)
+      @bitsize = init_bitsize(init_cap, bytes)
       @bpi = bpi
     end
 
@@ -24,6 +26,7 @@ class Bitary
     end
 
     def to_s = @array.map { |item| to_binstr(item) }.join(' ')
+    def to_a = @array.clone
 
     def each_byte(&proc)
       @array.each do |item|
@@ -38,33 +41,33 @@ class Bitary
       @bpi = value
     end
 
-    def method_missing(method, *, &)
-      @array.respond_to?(method) ? @array.send(method, *, &) : super
-    end
-
-    def respond_to_missing?(method, include_all = false)
-      @array.respond_to?(method, include_all) || super
-    end
-
     private
 
-    def init_bitsize(initial_data, bpi)
-      if initial_data.is_a?(Array)
-        Bitary::BYTE * initial_data.length
+    def init_bitsize(init_cap, bytes)
+      if init_cap.nil?
+        if bytes.nil?
+          DEFAULT_INIT_CAP
+        else
+          bytes.length * Bitary::BYTE
+        end
       else
-        initial_data
+        init_cap
       end
     end
 
-    def init_array(initial_data, bitsize, bpi)
-      if initial_data.is_a?(Array)
+    def init_array(init_cap, bytes, bpi)
+      if init_cap.nil? && bytes.nil?
+        [0] * (DEFAULT_INIT_CAP / bpi.to_f).ceil
+      elsif !init_cap.nil? && bytes.nil?
+        [0] * (init_cap / bpi.to_f).ceil
+      elsif init_cap.nil? && !bytes.nil?
         if bpi == Bitary::BYTE
-          initial_data.clone
+          bytes.clone
         else
-          increase_items_size(initial_data, bpi, Bitary::BYTE)
+          increase_items_size(bytes, bpi, Bitary::BYTE)
         end
       else
-        [0] * (bitsize / bpi.to_f).ceil
+        bytes.clone
       end
     end
 
