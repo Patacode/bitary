@@ -49,7 +49,11 @@ class Bitary
     private
 
     def init_bitsize(initial_data, bpi)
-      initial_data.is_a?(Array) ? bpi * initial_data.length : initial_data
+      if initial_data.is_a?(Array)
+        Bitary::BYTE * initial_data.length
+      else
+        initial_data
+      end
     end
 
     def init_array(initial_data, bitsize, bpi)
