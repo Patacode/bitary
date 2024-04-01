@@ -55,35 +55,47 @@ class Bitary
       end
     end
 
+    def compute_nb_items(init_cap, bpi)
+      (init_cap / bpi.to_f).ceil
+    end
+
+    def fill_array(value, size, bpi)
+      [value] * compute_nb_items(size, bpi)
+    end
+
     def init_array(init_cap, bytes, bpi)
-      if init_cap.nil? && bytes.nil?
-        [0] * (DEFAULT_INIT_CAP / bpi.to_f).ceil
-      elsif !init_cap.nil? && bytes.nil?
-        [0] * (init_cap / bpi.to_f).ceil
-      elsif init_cap.nil? && !bytes.nil?
-        if bpi == Bitary::BYTE
-          bytes.clone
+      if init_cap.nil?
+        if bytes.nil?
+          fill_array(0, DEFAULT_INIT_CAP, bpi)
         else
-          increase_items_size(bytes, bpi, Bitary::BYTE)
+          adjust_array(bytes, bpi)
         end
+      elsif bytes.nil?
+        fill_array(0, init_cap, bpi)
       else
-        clone =
-          if bpi == Bitary::BYTE
-            bytes.clone
-          else
-            increase_items_size(bytes, bpi, Bitary::BYTE)
-          end
-
+        clone = adjust_array(bytes, bpi)
         if init_cap > clone.length * bpi
-          target_size = (init_cap / bpi.to_f).ceil
-          while target_size > clone.length
-            clone << 0
-            target_size -= 1
-          end
+          adjust_array_to_cap(clone, init_cap, bpi)
         end
-
         clone
       end
+    end
+
+    def adjust_array(bytes, bpi)
+      if bpi == Bitary::BYTE
+        bytes.clone
+      else
+        increase_items_size(bytes, bpi, Bitary::BYTE)
+      end
+    end
+
+    def adjust_array_to_cap(bytes, init_cap, bpi)
+      target_size = compute_nb_items(init_cap, bpi)
+      while target_size > bytes.length
+        bytes << 0
+        target_size -= 1
+      end
+      bytes
     end
 
     def item_index(bit_index)
