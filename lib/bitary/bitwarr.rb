@@ -15,40 +15,14 @@ class Bitary
       self.bpi = bpi
     end
 
-    def method_missing(method, *, &)
-      @array.respond_to?(method) ? @array.send(method, *, &) : super
-    end
-
-    def respond_to_missing?(method, include_all = false)
-      @array.respond_to?(method, include_all) || super
-    end
-
-    def [](bit_index)
-      @array[item_index(bit_index)]
-    end
+    def [](bit_index) = @array[item_index(bit_index)]
+    def bit_at(index) = operate_bit_at(:get, index)
+    def bit_at!(index) = operate_bit_at!(:set, index)
+    def unbit_at!(index) = operate_bit_at!(:unset, index)
+    def to_s = @array.map { |item| to_binstr(item) }.join(' ')
 
     def []=(bit_index, value)
-      raise ArgumentError unless value.is_a?(Integer)
-
       @array[item_index(bit_index)] = value
-    end
-
-    def item_index(bit_index)
-      check_bit_index(bit_index)
-
-      bit_index / @bpi
-    end
-
-    def bit_at(index)
-      operate_bit_at(:get, index)
-    end
-
-    def bit_at!(index)
-      operate_bit_at!(:set, index)
-    end
-
-    def unbit_at!(index)
-      operate_bit_at!(:unset, index)
     end
 
     def each_byte(&proc)
@@ -57,17 +31,20 @@ class Bitary
       end
     end
 
-    def to_s
-      @array.map { |item| format("%0#{@bpi}d", item.to_s(2)) }.join(' ')
-    end
-
     def bpi=(value)
       check_bpi(value)
       return if value == @bpi
 
       update_items_size!(value)
-
       @bpi = value
+    end
+
+    def method_missing(method, *, &)
+      @array.respond_to?(method) ? @array.send(method, *, &) : super
+    end
+
+    def respond_to_missing?(method, include_all = false)
+      @array.respond_to?(method, include_all) || super
     end
 
     private
@@ -106,6 +83,15 @@ class Bitary
       ].include?(bpi)
     end
 
+    def item_index(bit_index)
+      check_bit_index(bit_index)
+      bit_index / @bpi
+    end
+
+    def to_binstr(item)
+      format("%0#{@bpi}d", item.to_s(2))
+    end
+
     def operate_bit_at(operation, index)
       Factory
         .make("Handler::#{operation.capitalize}", self[index])
@@ -120,29 +106,34 @@ class Bitary
     end
 
     def update_items_size!(value)
-      if value > @bpi
-        increase_items_size!(value)
-      else
-        decrease_items_size!(value)
-      end
+      value > @bpi ? increase_items_size!(value) : decrease_items_size!(value)
     end
 
     def increase_items_size(array, new_size, bpi)
       processed_bits = 0
-      array.each_with_object([0]) do |value, acc|
-        offset = bpi
-        if processed_bits >= new_size
-          offset = 0
+      res = array.each_with_object([0]) do |item, acc|
+        if processed_bits == new_size
           acc << 0
           processed_bits = 0
         end
 
         acc[-1] = Factory.make('Handler::Append', acc[-1]).execute(
-          offset:,
-          value:
+          offset: bpi,
+          value: item
+        )
+
+        processed_bits += bpi
+      end
+
+      while processed_bits < new_size
+        res[-1] = Factory.make('Handler::Append', res[-1]).execute(
+          offset: bpi,
+          value: 0
         )
         processed_bits += bpi
       end
+
+      res
     end
 
     def increase_items_size!(value)
@@ -162,12 +153,9 @@ class Bitary
     end
 
     def explode_item(item, new_size, bpi)
-      offset = bpi
       mask = (2**new_size) - 1
-
-      while offset.positive?
-        offset -= new_size
-        yield ((item >> offset) & mask)
+      (bpi / new_size).times do |i|
+        yield ((item >> (bpi - (new_size * (i + 1)))) & mask)
       end
     end
   end
