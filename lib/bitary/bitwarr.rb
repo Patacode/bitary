@@ -2,13 +2,13 @@
 
 class Bitary
   class Bitwarr
-    attr_reader :bpi, :bitsize
+    attr_reader :bpi, :bits
 
     DEFAULT_INIT_CAP = Bitary::Size::LONG * 2
 
     def initialize(init_cap = nil, bytes: nil, bpi: Bitary::LONG)
       @array = init_array(init_cap, bytes, bpi)
-      @bitsize = init_bitsize(init_cap, bytes)
+      @bits = init_bits(init_cap, bytes)
       @bpi = bpi
     end
 
@@ -43,7 +43,7 @@ class Bitary
 
     private
 
-    def init_bitsize(init_cap, bytes)
+    def init_bits(init_cap, bytes)
       if init_cap.nil?
         if bytes.nil?
           DEFAULT_INIT_CAP
@@ -67,7 +67,22 @@ class Bitary
           increase_items_size(bytes, bpi, Bitary::BYTE)
         end
       else
-        bytes.clone
+        clone =
+          if bpi == Bitary::BYTE
+            bytes.clone
+          else
+            increase_items_size(bytes, bpi, Bitary::BYTE)
+          end
+
+        if init_cap > clone.length * bpi
+          target_size = (init_cap / bpi.to_f).ceil
+          while target_size > clone.length
+            clone << 0
+            target_size -= 1
+          end
+        end
+
+        clone
       end
     end
 

@@ -7,11 +7,12 @@ require_relative 'bitary/bitwarr'
 class Bitary
   include Size
 
-  def initialize(initial_data, bpi: LONG)
-    check_initial_data(initial_data)
+  def initialize(init_cap = nil, bytes: nil, bpi: LONG)
+    check_init_cap(init_cap)
+    check_bytes(bytes)
     check_bpi(bpi)
 
-    @bitwarr = Bitwarr.new(initial_data, bpi:)
+    @bitwarr = Bitwarr.new(init_cap, bytes:, bpi:)
   end
 
   def [](index)
@@ -55,8 +56,8 @@ class Bitary
     @bitwarr.bpi = value
   end
 
-  def size
-    @bitwarr.bitsize
+  def bits
+    @bitwarr.bits
   end
 
   def bpi
@@ -65,8 +66,17 @@ class Bitary
 
   private
 
-  def check_initial_data(initial_data)
-    raise ArgumentError unless [Array, Integer].include?(initial_data.class)
+  def check_init_cap(init_cap)
+    return if init_cap.nil?
+
+    raise ArgumentError unless init_cap.is_a?(Integer)
+    raise ArgumentError unless init_cap.positive?
+  end
+
+  def check_bytes(bytes)
+    return if bytes.nil?
+
+    raise ArgumentError unless bytes.is_a?(Array)
   end
 
   def check_bpi(bpi)
@@ -75,7 +85,7 @@ class Bitary
 
   def check_bit_index(bit_index)
     raise ArgumentError unless bit_index.is_a?(Integer)
-    raise IndexError if bit_index.negative? || bit_index >= @bitwarr.bitsize
+    raise IndexError if bit_index.negative? || bit_index >= @bitwarr.bits
   end
 
   def obj_to_bit(value)
