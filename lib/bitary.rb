@@ -2,10 +2,7 @@
 
 require_relative 'bitary/size'
 require_relative 'bitary/version'
-require_relative 'bitary/factory'
 require_relative 'bitary/bitwarr'
-require_relative 'bitary/decorator'
-require_relative 'bitary/mapper'
 
 class Bitary
   include Size
@@ -14,7 +11,7 @@ class Bitary
     check_initial_data(initial_data)
     check_bpi(bpi)
 
-    @bitwarr = Factory.make('Bitwarr', initial_data, bpi:)
+    @bitwarr = Bitwarr.new(initial_data, bpi:)
   end
 
   def [](index)
@@ -26,7 +23,7 @@ class Bitary
   def []=(index, value)
     check_bit_index(index)
 
-    case Factory.make('Mapper::ObjToBit').map(value)
+    case obj_to_bit(value)
     when 0 then @bitwarr.unbit_at!(index)
     else @bitwarr.bit_at!(index)
     end
@@ -79,6 +76,21 @@ class Bitary
   def check_bit_index(bit_index)
     raise ArgumentError unless bit_index.is_a?(Integer)
     raise IndexError if bit_index.negative? || bit_index >= @bitwarr.bitsize
+  end
+
+  def obj_to_bit(value)
+    case !!value
+    when true then truthy_to_bit(value)
+    when false then 0
+    end
+  end
+
+  def truthy_to_bit(value)
+    value.is_a?(Integer) ? int_to_bit(value) : 1
+  end
+
+  def int_to_bit(value)
+    value.zero? ? 0 : 1
   end
 
   alias at []

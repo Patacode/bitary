@@ -74,19 +74,6 @@ class Bitary
       format("%0#{@bpi}d", item.to_s(2))
     end
 
-    def operate_bit_at(operation, index)
-      Factory
-        .make("Handler::#{operation.capitalize}", self[index])
-        .execute(
-          index: index % @bpi,
-          size: @bpi
-        )
-    end
-
-    def operate_bit_at!(operation, index)
-      self[index] = operate_bit_at(operation, index)
-    end
-
     def update_items_size!(value)
       value > @bpi ? increase_items_size!(value) : decrease_items_size!(value)
     end
