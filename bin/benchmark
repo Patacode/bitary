@@ -11,7 +11,7 @@ def bench_code(times, name:)
   puts "Executing [#{name}] #{times} times"
 
   exec_times = []
-  TIMES.times do |i|
+  times.times do |i|
     bm = Benchmark.measure do
       yield
     end
@@ -20,7 +20,7 @@ def bench_code(times, name:)
     puts format("#%03i real time = %.6f sec", i, bm.real)
   end
 
-  average = exec_times.sum / TIMES
+  average = exec_times.sum / times
   worst = exec_times.max
   best = exec_times.min
 
@@ -39,4 +39,6 @@ data = setup do |store|
   # setup code
 end
 
-# add benchmarks
+bench_code(TIMES, name: '#foo') do
+  # code to bench
+end
