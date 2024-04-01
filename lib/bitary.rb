@@ -42,7 +42,7 @@ class Bitary
   end
 
   def to_a
-    @bitwarr.to_a
+    @bitwarr.to_a.clone
   end
 
   def to_s
