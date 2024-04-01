@@ -1,3 +1,8 @@
+## [0.1.7] - 2024-04-01
+
+- loads of refactoring and perf improvements
+- Bitary now acts as the logical layer, whereas Bitwarr acts as the business layer
+
 ## [0.1.6] - 2024-03-31
 
 - enhance global perf by remove useless and heavy error handling
