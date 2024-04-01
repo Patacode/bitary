@@ -59,10 +59,6 @@ class Bitary
       (init_cap / bpi.to_f).ceil
     end
 
-    def fill_array(value, size, bpi)
-      [value] * compute_nb_items(size, bpi)
-    end
-
     def init_array(init_cap, bytes, bpi)
       if init_cap.nil?
         if bytes.nil?
@@ -79,6 +75,10 @@ class Bitary
         end
         clone
       end
+    end
+
+    def fill_array(value, size, bpi)
+      [value] * compute_nb_items(size, bpi)
     end
 
     def adjust_array(bytes, bpi)
