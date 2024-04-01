@@ -92,10 +92,7 @@ class Bitary
     end
 
     def append_bits(item, bpi, addend)
-      Factory.make('Handler::Append', item).execute(
-        offset: bpi,
-        value: addend
-      )
+      (item << bpi) | addend
     end
 
     def increase_items_size(array, new_size, bpi)
