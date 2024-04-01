@@ -7,9 +7,7 @@ class Bitary
     def initialize(initial_data, bpi: Bitary::LONG)
       @bitsize = init_bitsize(initial_data, bpi)
       @array = init_array(initial_data, @bitsize, bpi)
-      @bpi = init_bpi(initial_data, bpi)
-
-      self.bpi = bpi
+      @bpi = bpi
     end
 
     def [](bit_index) = @array[item_index(bit_index)]
@@ -50,17 +48,17 @@ class Bitary
 
     private
 
-    def init_bpi(initial_data, bpi)
-      initial_data.is_a?(Array) ? Bitary::BYTE : bpi
-    end
-
     def init_bitsize(initial_data, bpi)
       initial_data.is_a?(Array) ? bpi * initial_data.length : initial_data
     end
 
     def init_array(initial_data, bitsize, bpi)
       if initial_data.is_a?(Array)
-        initial_data.clone
+        if bpi == Bitary::BYTE
+          initial_data.clone
+        else
+          increase_items_size(initial_data, bpi, Bitary::BYTE)
+        end
       else
         [0] * (bitsize / bpi.to_f).ceil
       end
@@ -74,8 +72,16 @@ class Bitary
       format("%0#{@bpi}d", item.to_s(2))
     end
 
-    def update_items_size!(value)
-      value > @bpi ? increase_items_size!(value) : decrease_items_size!(value)
+    def update_items_size!(new_size)
+      @array = update_items_size(@array, new_size, @bpi)
+    end
+
+    def update_items_size(array, new_size, bpi)
+      if new_size > bpi
+        increase_items_size(array, new_size, bpi)
+      else
+        decrease_items_size(array, new_size, bpi)
+      end
     end
 
     def append_bits(item, bpi, addend)
@@ -102,20 +108,12 @@ class Bitary
       res
     end
 
-    def increase_items_size!(value)
-      @array = increase_items_size(@array, value, @bpi)
-    end
-
     def decrease_items_size(array, new_size, bpi)
       array.each_with_object([]) do |item, acc|
         explode_item(item, new_size, bpi) do |new_item|
           acc << new_item
         end
       end
-    end
-
-    def decrease_items_size!(value)
-      @array = decrease_items_size(@array, value, @bpi)
     end
 
     def explode_item(item, new_size, bpi)
