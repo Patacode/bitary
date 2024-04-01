@@ -12,17 +12,24 @@ class Bitary
   include Size
 
   def initialize(initial_data, bpi: LONG)
-    @internal_array = Factory.make('Bitwarr', initial_data, bpi:)
+    check_initial_data(initial_data)
+    check_bpi(bpi)
+
+    @bitwarr = Factory.make('Bitwarr', initial_data, bpi:)
   end
 
   def [](index)
-    @internal_array.bit_at(index)
+    check_bit_index(index)
+
+    @bitwarr.bit_at(index)
   end
 
   def []=(index, value)
+    check_bit_index(index)
+
     case Factory.make('Mapper::ObjToBit').map(value)
-    when 0 then @internal_array.unbit_at!(index)
-    else @internal_array.bit_at!(index)
+    when 0 then @bitwarr.unbit_at!(index)
+    else @bitwarr.bit_at!(index)
     end
   end
 
@@ -35,27 +42,44 @@ class Bitary
   end
 
   def each_byte(&)
-    @internal_array.each_byte(&)
+    @bitwarr.each_byte(&)
   end
 
   def to_a
-    @internal_array.to_a
+    @bitwarr.to_a
   end
 
   def to_s
-    @internal_array.to_s
+    @bitwarr.to_s
   end
 
   def bpi=(value)
-    @internal_array.bpi = value
+    check_bpi(value)
+
+    @bitwarr.bpi = value
   end
 
   def size
-    @internal_array.bitsize
+    @bitwarr.bitsize
   end
 
   def bpi
-    @internal_array.bpi
+    @bitwarr.bpi
+  end
+
+  private
+
+  def check_initial_data(initial_data)
+    raise ArgumentError unless [Array, Integer].include?(initial_data.class)
+  end
+
+  def check_bpi(bpi)
+    raise ArgumentError unless [BYTE, SHORT, INT, LONG].include?(bpi)
+  end
+
+  def check_bit_index(bit_index)
+    raise ArgumentError unless bit_index.is_a?(Integer)
+    raise IndexError if bit_index.negative? || bit_index >= @bitwarr.bitsize
   end
 
   alias at []

@@ -5,9 +5,6 @@ class Bitary
     attr_reader :bpi, :bitsize
 
     def initialize(initial_data, bpi: Bitary::LONG)
-      check_initial_data(initial_data)
-      check_bpi(bpi)
-
       @bitsize = init_bitsize(initial_data, bpi)
       @array = init_array(initial_data, @bitsize, bpi)
       @bpi = init_bpi(initial_data, bpi)
@@ -32,7 +29,6 @@ class Bitary
     end
 
     def bpi=(value)
-      check_bpi(value)
       return if value == @bpi
 
       update_items_size!(value)
@@ -65,26 +61,7 @@ class Bitary
       end
     end
 
-    def check_initial_data(initial_data)
-      raise ArgumentError unless [Array, Integer].include?(initial_data.class)
-    end
-
-    def check_bit_index(bit_index)
-      raise ArgumentError unless bit_index.is_a?(Integer)
-      raise IndexError if bit_index.negative? || bit_index >= @bitsize
-    end
-
-    def check_bpi(bpi)
-      raise ArgumentError unless [
-        Bitary::BYTE,
-        Bitary::SHORT,
-        Bitary::INT,
-        Bitary::LONG
-      ].include?(bpi)
-    end
-
     def item_index(bit_index)
-      check_bit_index(bit_index)
       bit_index / @bpi
     end
 
