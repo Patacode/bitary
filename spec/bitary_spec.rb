@@ -119,9 +119,9 @@ RSpec.describe Bitary do
     it 'returns a clone of the internal array backed by the bit array' do
       bit_array = Bitary.new(10)
 
-      expect(bit_array.to_a).not_to be(
-        bit_array.instance_variable_get(:@internal_array)
-      )
+      bit_array.to_a[0] = 33
+
+      expect(bit_array.to_a).to eq([0])
     end
   end
 
