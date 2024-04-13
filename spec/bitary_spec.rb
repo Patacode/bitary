@@ -261,14 +261,14 @@ RSpec.describe Bitary do
     include_examples :bit_access, :at
   end
 
-  describe '#set' do
+  describe '#set!' do
     let(:instance) { Bitary.new(bytes: [148, 145, 5], bpi: 8) }
 
     it 'sets the bit at given index' do
-      instance.set(1)
-      instance.set(14)
-      instance.set(15)
-      instance.set(9)
+      instance.set!(1)
+      instance.set!(14)
+      instance.set!(15)
+      instance.set!(9)
 
       expect(instance[1]).to eq(1)
       expect(instance[14]).to eq(1)
@@ -277,22 +277,22 @@ RSpec.describe Bitary do
     end
 
     it 'raises an IndexError if given index is out of bounds' do
-      expect { instance.set(-1) }.to raise_error(IndexError)
-      expect { instance.set(24) }.to raise_error(IndexError)
+      expect { instance.set!(-1) }.to raise_error(IndexError)
+      expect { instance.set!(24) }.to raise_error(IndexError)
     end
 
     it 'raises a TypeError if given index is not an Integer' do
-      expect { instance.set('invalid') }.to raise_error(TypeError)
+      expect { instance.set!('invalid') }.to raise_error(TypeError)
     end
   end
 
-  describe '#unset' do
+  describe '#unset!' do
     let(:instance) { Bitary.new(bytes: [148, 145, 5], bpi: 8) }
 
     it 'unsets the bit at given index (to 0)' do
-      instance.unset(0)
-      instance.unset(3)
-      instance.unset(5)
+      instance.unset!(0)
+      instance.unset!(3)
+      instance.unset!(5)
 
       expect(instance[0]).to eq(0)
       expect(instance[3]).to eq(0)
@@ -300,12 +300,12 @@ RSpec.describe Bitary do
     end
 
     it 'raises an IndexError if given index is out of bounds' do
-      expect { instance.unset(-1) }.to raise_error(IndexError)
-      expect { instance.unset(24) }.to raise_error(IndexError)
+      expect { instance.unset!(-1) }.to raise_error(IndexError)
+      expect { instance.unset!(24) }.to raise_error(IndexError)
     end
 
     it 'raises a TypeError if given index is not an Integer' do
-      expect { instance.unset('invalid') }.to raise_error(TypeError)
+      expect { instance.unset!('invalid') }.to raise_error(TypeError)
     end
   end
 
