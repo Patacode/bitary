@@ -6,7 +6,7 @@ class Bitary
 
     DEFAULT_INIT_CAP = Bitary::Size::LONG * 2
 
-    def initialize(init_cap = nil, bytes: nil, bpi: Bitary::LONG)
+    def initialize(init_cap, bytes:, bpi:)
       @array = init_array(init_cap, bytes, bpi)
       @bits = init_bits(init_cap, bytes)
       @bpi = bpi
