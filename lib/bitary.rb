@@ -89,10 +89,7 @@ class Bitary
   end
 
   def obj_to_bit(value)
-    case !!value
-    when true then truthy_to_bit(value)
-    when false then 0
-    end
+    !!value ? truthy_to_bit(value) : 0
   end
 
   def truthy_to_bit(value)
