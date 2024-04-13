@@ -69,22 +69,23 @@ class Bitary
   def check_init_cap(init_cap)
     return if init_cap.nil?
 
-    raise ArgumentError unless init_cap.is_a?(Integer)
+    raise TypeError unless init_cap.is_a?(Integer)
     raise ArgumentError unless init_cap.positive?
   end
 
   def check_bytes(bytes)
     return if bytes.nil?
 
-    raise ArgumentError unless bytes.is_a?(Array)
+    raise TypeError unless bytes.is_a?(Array)
   end
 
   def check_bpi(bpi)
+    raise TypeError unless bpi.is_a?(Integer)
     raise ArgumentError unless [BYTE, SHORT, INT, LONG].include?(bpi)
   end
 
   def check_bit_index(bit_index)
-    raise ArgumentError unless bit_index.is_a?(Integer)
+    raise TypeError unless bit_index.is_a?(Integer)
     raise IndexError if bit_index.negative? || bit_index >= @bitwarr.bits
   end
 
