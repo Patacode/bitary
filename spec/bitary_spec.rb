@@ -15,8 +15,8 @@ RSpec.shared_examples :bit_access do |method|
     expect { instance.send(method, 27) }.to raise_error(IndexError)
   end
 
-  it 'raises an ArgumentError if given index is not an Integer' do
-    expect { instance.send(method, 'invalid') }.to raise_error(ArgumentError)
+  it 'raises a TypeError if given index is not an Integer' do
+    expect { instance.send(method, 'invalid') }.to raise_error(TypeError)
   end
 end
 
@@ -114,8 +114,8 @@ RSpec.describe Bitary do
       expect { Bitary.new(100, bpi: 9) }.to raise_error(ArgumentError)
     end
 
-    it 'raises an ArgumentError if bpi is not an Integer' do
-      expect { Bitary.new(100, bpi: 'invalid') }.to raise_error(ArgumentError)
+    it 'raises a TypeError if bpi is not an Integer' do
+      expect { Bitary.new(100, bpi: 'invalid') }.to raise_error(TypeError)
     end
 
     it 'raises an ArgumentError if more than 1 pos args are given' do
@@ -126,15 +126,12 @@ RSpec.describe Bitary do
       expect { Bitary.new(invalid: 'kwarg') }.to raise_error(ArgumentError)
     end
 
-    it(
-      'raises an ArgumentError if initial bit capacity is not an Integer ' \
-      'but nil'
-    ) do
-      expect { Bitary.new('invalid') }.to raise_error(ArgumentError)
+    it 'raises a TypeError if initial bit capacity is not an Integer or nil' do
+      expect { Bitary.new('invalid') }.to raise_error(TypeError)
     end
 
-    it 'raises an ArgumentError if byte array is not an Array but nil' do
-      expect { Bitary.new(bytes: { invalid: 1 }) }.to raise_error(ArgumentError)
+    it 'raises a TypeError if byte array is not an Array or nil' do
+      expect { Bitary.new(bytes: { invalid: 1 }) }.to raise_error(TypeError)
     end
   end
 
@@ -197,8 +194,8 @@ RSpec.describe Bitary do
       expect { instance.bpi = 40 }.to raise_error(ArgumentError)
     end
 
-    it 'raises an ArgumentError if value is not an Integer' do
-      expect { instance.bpi = 'invalid' }.to raise_error(ArgumentError)
+    it 'raises a TypeError if value is not an Integer' do
+      expect { instance.bpi = 'invalid' }.to raise_error(TypeError)
     end
   end
 
@@ -255,8 +252,8 @@ RSpec.describe Bitary do
       expect { instance[24] = 0 }.to raise_error(IndexError)
     end
 
-    it 'raises an ArgumentError if given index is not an Integer' do
-      expect { instance['invalid'] = 3 }.to raise_error(ArgumentError)
+    it 'raises a TypeError if given index is not an Integer' do
+      expect { instance['invalid'] = 3 }.to raise_error(TypeError)
     end
   end
 
@@ -284,8 +281,8 @@ RSpec.describe Bitary do
       expect { instance.set(24) }.to raise_error(IndexError)
     end
 
-    it 'raises an ArgumentError if given index is not an Integer' do
-      expect { instance.set('invalid') }.to raise_error(ArgumentError)
+    it 'raises a TypeError if given index is not an Integer' do
+      expect { instance.set('invalid') }.to raise_error(TypeError)
     end
   end
 
@@ -307,8 +304,8 @@ RSpec.describe Bitary do
       expect { instance.unset(24) }.to raise_error(IndexError)
     end
 
-    it 'raises an ArgumentError if given index is not an Integer' do
-      expect { instance.unset('invalid') }.to raise_error(ArgumentError)
+    it 'raises a TypeError if given index is not an Integer' do
+      expect { instance.unset('invalid') }.to raise_error(TypeError)
     end
   end
 
