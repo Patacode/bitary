@@ -29,9 +29,11 @@ class Bitary
     def to_a = @array.clone
 
     def each_byte(&proc)
+      raise ArgumentError if proc.nil?
+
       @array.each do |item|
         explode_item(item, Bitary::BYTE, @bpi, &proc)
-      end
+      end.clone
     end
 
     def bpi=(value)
