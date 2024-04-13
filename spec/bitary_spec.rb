@@ -38,10 +38,68 @@ RSpec.describe Bitary do
   end
 
   describe '::new' do
-    it 'returns a new instance' do
+    it(
+      'returns a new instance with given byte array, initial bit capacity ' \
+      'and bits per item'
+    ) do
       expect(Bitary.new(128, bytes: [255, 10, 20], bpi: 16)).to be_instance_of(
         Bitary
       )
+    end
+
+    it 'returns a new instance with no args' do
+      expect(Bitary.new).to be_instance_of(Bitary)
+    end
+
+    it 'returns a new instance with given initial bit capacity' do
+      expect(Bitary.new(10)).to be_instance_of(Bitary)
+    end
+
+    it 'returns a new instance with given nil initial bit capacity' do
+      expect(Bitary.new(nil)).to be_instance_of(Bitary)
+    end
+
+    it 'returns a new instance with given byte array' do
+      expect(Bitary.new(bytes: [255, 10, 20])).to be_instance_of(Bitary)
+    end
+
+    it 'returns a new instance with given bits per item' do
+      expect(Bitary.new(bpi: 32)).to be_instance_of(Bitary)
+    end
+
+    it 'returns a new instance with given nil byte array' do
+      expect(Bitary.new(bytes: nil)).to be_instance_of(Bitary)
+    end
+
+    it(
+      'returns a new instance with given byte array and initial bit ' \
+      'capacity more than default'
+    ) do
+      expect(Bitary.new(128, bytes: [255, 10, 20])).to be_instance_of(Bitary)
+    end
+
+    it(
+      'returns a new instance with given byte array and initial bit ' \
+      'capacity less than default'
+    ) do
+      expect(Bitary.new(20, bytes: [255, 10, 20])).to be_instance_of(Bitary)
+    end
+
+    it(
+      'returns a new instance with given byte array and initial bit ' \
+      'capacity equal to default'
+    ) do
+      expect(Bitary.new(24, bytes: [255, 10, 20])).to be_instance_of(Bitary)
+    end
+
+    it(
+      'returns a new instance with given initial bit capacity and bits per item'
+    ) do
+      expect(Bitary.new(20, bpi: 8)).to be_instance_of(Bitary)
+    end
+
+    it 'returns a new instance with given byte array and bits per item' do
+      expect(Bitary.new(bytes: [1, 2, 3], bpi: 8)).to be_instance_of(Bitary)
     end
 
     it 'raises an ArgumentError if initial bit capacity is 0' do
@@ -101,6 +159,12 @@ RSpec.describe Bitary do
 
     it 'returns the number of bits used per item' do
       expect(instance.bpi).to eq(8)
+    end
+
+    it 'returns a default value of 64 when not given in constructor' do
+      instance = Bitary.new
+
+      expect(instance.bpi).to eq(64)
     end
 
     it 'raises an ArgumentError if pos args are given' do

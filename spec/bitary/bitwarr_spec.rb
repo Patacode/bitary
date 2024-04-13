@@ -4,77 +4,12 @@ require 'bitary'
 
 RSpec.shared_context :bitwarr do
   before(:example) do
-    @bitwarr = Bitary::Bitwarr.new(bytes: [1, 2, 3], bpi: 8)
+    @bitwarr = Bitary::Bitwarr.new(nil, bytes: [1, 2, 3], bpi: 8)
   end
 end
 
 RSpec.describe Bitary::Bitwarr do
   describe '::new' do
-    it 'returns a new instance with no args' do
-      expect(Bitary::Bitwarr.new).to be_instance_of(Bitary::Bitwarr)
-    end
-
-    it 'returns a new instance with given initial bit capacity' do
-      expect(Bitary::Bitwarr.new(10)).to be_instance_of(Bitary::Bitwarr)
-    end
-
-    it 'returns a new instance with given nil initial bit capacity' do
-      expect(Bitary::Bitwarr.new(nil)).to be_instance_of(Bitary::Bitwarr)
-    end
-
-    it 'returns a new instance with given byte array' do
-      expect(Bitary::Bitwarr.new(bytes: [255, 10, 20])).to be_instance_of(
-        Bitary::Bitwarr
-      )
-    end
-
-    it 'returns a new instance with given bits per item' do
-      expect(Bitary::Bitwarr.new(bpi: 32)).to be_instance_of(Bitary::Bitwarr)
-    end
-
-    it 'returns a new instance with given nil byte array' do
-      expect(Bitary::Bitwarr.new(bytes: nil)).to be_instance_of(Bitary::Bitwarr)
-    end
-
-    it(
-      'returns a new instance with given byte array and initial bit ' \
-      'capacity more than default'
-    ) do
-      expect(Bitary::Bitwarr.new(128, bytes: [255, 10, 20])).to be_instance_of(
-        Bitary::Bitwarr
-      )
-    end
-
-    it(
-      'returns a new instance with given byte array and initial bit ' \
-      'capacity less than default'
-    ) do
-      expect(Bitary::Bitwarr.new(20, bytes: [255, 10, 20])).to be_instance_of(
-        Bitary::Bitwarr
-      )
-    end
-
-    it(
-      'returns a new instance with given byte array and initial bit ' \
-      'capacity equal to default'
-    ) do
-      expect(Bitary::Bitwarr.new(24, bytes: [255, 10, 20])).to be_instance_of(
-        Bitary::Bitwarr
-      )
-    end
-
-    it(
-      'returns a new instance with given initial bit capacity and bits per item'
-    ) do
-      expect(Bitary::Bitwarr.new(20, bpi: 8)).to be_instance_of(Bitary::Bitwarr)
-    end
-
-    it 'returns a new instance with given byte array and bits per item' do
-      expect(Bitary::Bitwarr.new(bytes: [1, 2, 3], bpi: 8)).to be_instance_of(
-        Bitary::Bitwarr
-      )
-    end
-
     it(
       'returns a new instance with given byte array, initial bit capacity ' \
       'and bits per item'
@@ -87,13 +22,13 @@ RSpec.describe Bitary::Bitwarr do
 
   describe '#bits' do
     it 'returns the bit size given in constructor' do
-      instance = Bitary::Bitwarr.new(73)
+      instance = Bitary::Bitwarr.new(73, bytes: nil, bpi: 8)
 
       expect(instance.bits).to eq(73)
     end
 
     it 'returns the bit size deducted from byte array given in constructor' do
-      instance = Bitary::Bitwarr.new(bytes: [1, 2, 3])
+      instance = Bitary::Bitwarr.new(nil, bytes: [1, 2, 3], bpi: 8)
 
       expect(instance.bits).to eq(24)
     end
@@ -102,7 +37,7 @@ RSpec.describe Bitary::Bitwarr do
       'returns a default value of 128 when it cannot be deducted from ' \
       'constructor args'
     ) do
-      instance = Bitary::Bitwarr.new
+      instance = Bitary::Bitwarr.new(nil, bytes: nil, bpi: 8)
 
       expect(instance.bits).to eq(128)
     end
@@ -110,7 +45,7 @@ RSpec.describe Bitary::Bitwarr do
 
   describe '#to_a' do
     it 'returns a shallow copy of internal array' do
-      instance = Bitary::Bitwarr.new(bytes: [1, 2, 3, 4, 5], bpi: 32)
+      instance = Bitary::Bitwarr.new(nil, bytes: [1, 2, 3, 4, 5], bpi: 32)
 
       clone = instance.to_a
       clone[0] = 33
@@ -122,7 +57,7 @@ RSpec.describe Bitary::Bitwarr do
       'returns an unchanged shallow copy of byte array given in constructor ' \
       'if bpi == 8'
     ) do
-      instance = Bitary::Bitwarr.new(bytes: [1, 2, 3, 4, 5], bpi: 8)
+      instance = Bitary::Bitwarr.new(nil, bytes: [1, 2, 3, 4, 5], bpi: 8)
 
       clone = instance.to_a
       clone[0] = 33
@@ -157,21 +92,15 @@ RSpec.describe Bitary::Bitwarr do
 
   describe '#bpi' do
     it 'returns the number of bits used per item given in constructor' do
-      instance = Bitary::Bitwarr.new(bpi: 8)
+      instance = Bitary::Bitwarr.new(nil, bytes: nil, bpi: 8)
 
       expect(instance.bpi).to eq(8)
-    end
-
-    it 'returns a default value of 64 when not given in constructor' do
-      instance = Bitary::Bitwarr.new
-
-      expect(instance.bpi).to eq(64)
     end
   end
 
   describe '#bpi=' do
     it 'increases the bits used per item when value is > than actual bpi' do
-      instance = Bitary::Bitwarr.new(bytes: [1, 2, 3, 4, 5], bpi: 8)
+      instance = Bitary::Bitwarr.new(nil, bytes: [1, 2, 3, 4, 5], bpi: 8)
 
       instance.bpi = 32
 
@@ -179,7 +108,7 @@ RSpec.describe Bitary::Bitwarr do
     end
 
     it 'decreases the bits used per item when value is > than actual bpi' do
-      instance = Bitary::Bitwarr.new(bytes: [1, 2, 3, 4, 5], bpi: 64)
+      instance = Bitary::Bitwarr.new(nil, bytes: [1, 2, 3, 4, 5], bpi: 64)
 
       instance.bpi = 16
 
@@ -187,7 +116,7 @@ RSpec.describe Bitary::Bitwarr do
     end
 
     it 'does nothing if given value is == to actual bpi' do
-      instance = Bitary::Bitwarr.new(bytes: [1, 2, 3, 4, 5], bpi: 32)
+      instance = Bitary::Bitwarr.new(nil, bytes: [1, 2, 3, 4, 5], bpi: 32)
 
       instance.bpi = 32
 
@@ -218,7 +147,7 @@ RSpec.describe Bitary::Bitwarr do
 
   describe '#bit_at' do
     it 'gets the bit at given bit index when size is divisible by bpi' do
-      instance = Bitary::Bitwarr.new(bytes: [1, 2, 3], bpi: 8)
+      instance = Bitary::Bitwarr.new(nil, bytes: [1, 2, 3], bpi: 8)
 
       expect(instance.bit_at(13)).to eq(0)
       expect(instance.bit_at(14)).to eq(1)
@@ -237,7 +166,7 @@ RSpec.describe Bitary::Bitwarr do
       'sets the bit at given bit index when size is divisible by bpi and ' \
       'pre-init from byte array'
     ) do
-      instance = Bitary::Bitwarr.new(bytes: [1, 2, 3], bpi: 8)
+      instance = Bitary::Bitwarr.new(nil, bytes: [1, 2, 3], bpi: 8)
 
       instance.bit_at!(13)
 
@@ -248,7 +177,7 @@ RSpec.describe Bitary::Bitwarr do
       'sets the bit at given bit index when size is divisible by bpi and ' \
       'not pre-init from byte array'
     ) do
-      instance = Bitary::Bitwarr.new(32, bpi: 8)
+      instance = Bitary::Bitwarr.new(32, bytes: nil, bpi: 8)
 
       instance.bit_at!(23)
 
@@ -270,7 +199,7 @@ RSpec.describe Bitary::Bitwarr do
       'sets the bit at given bit index when size is not divisible by bpi and ' \
       'not pre-init from byte array'
     ) do
-      instance = Bitary::Bitwarr.new(35, bpi: 8)
+      instance = Bitary::Bitwarr.new(35, bytes: nil, bpi: 8)
 
       instance.bit_at!(34)
 
@@ -283,7 +212,7 @@ RSpec.describe Bitary::Bitwarr do
       'unsets the bit at given bit index when size is divisible by bpi and ' \
       'pre-init from byte array'
     ) do
-      instance = Bitary::Bitwarr.new(bytes: [1, 2, 3], bpi: 8)
+      instance = Bitary::Bitwarr.new(nil, bytes: [1, 2, 3], bpi: 8)
 
       instance.unbit_at!(14)
 
@@ -294,7 +223,7 @@ RSpec.describe Bitary::Bitwarr do
       'unsets the bit at given bit index when size is divisible by bpi and ' \
       'not pre-init from byte array'
     ) do
-      instance = Bitary::Bitwarr.new(32, bpi: 8)
+      instance = Bitary::Bitwarr.new(32, bytes: nil, bpi: 8)
 
       instance.bit_at!(23)
       instance.unbit_at!(23)
@@ -317,7 +246,7 @@ RSpec.describe Bitary::Bitwarr do
       'unsets the bit at given bit index when size is not divisible by bpi ' \
       'and not pre-init from byte array'
     ) do
-      instance = Bitary::Bitwarr.new(35, bpi: 8)
+      instance = Bitary::Bitwarr.new(35, bytes: nil, bpi: 8)
 
       instance.bit_at!(34)
       instance.unbit_at!(34)
@@ -328,7 +257,7 @@ RSpec.describe Bitary::Bitwarr do
 
   describe '#each_byte' do
     it "iterates over each internal array's byte when bpi == 8" do
-      instance = Bitary::Bitwarr.new(bytes: [1, 2, 3], bpi: 8)
+      instance = Bitary::Bitwarr.new(nil, bytes: [1, 2, 3], bpi: 8)
       counter = 0
 
       instance.each_byte do |byte|
@@ -344,7 +273,7 @@ RSpec.describe Bitary::Bitwarr do
     end
 
     it "iterates over each internal array's byte when bpi > 8" do
-      instance = Bitary::Bitwarr.new(bytes: [1, 2, 3], bpi: 32)
+      instance = Bitary::Bitwarr.new(nil, bytes: [1, 2, 3], bpi: 32)
       counter = 0
 
       instance.each_byte do |byte|
@@ -363,25 +292,25 @@ RSpec.describe Bitary::Bitwarr do
 
   describe '#to_s' do
     it 'converts the internal array to a binary string when bpi == 8' do
-      instance = Bitary::Bitwarr.new(bytes: [1, 2, 3], bpi: 8)
+      instance = Bitary::Bitwarr.new(nil, bytes: [1, 2, 3], bpi: 8)
 
       expect(instance.to_s).to eq('00000001 00000010 00000011')
     end
 
     it 'converts the internal array to a binary string when bpi == 16' do
-      instance = Bitary::Bitwarr.new(bytes: [1, 2, 3], bpi: 16)
+      instance = Bitary::Bitwarr.new(nil, bytes: [1, 2, 3], bpi: 16)
 
       expect(instance.to_s).to eq('0000000100000010 0000001100000000')
     end
 
     it 'converts the internal array to a binary string when bpi == 32' do
-      instance = Bitary::Bitwarr.new(bytes: [1, 2, 3], bpi: 32)
+      instance = Bitary::Bitwarr.new(nil, bytes: [1, 2, 3], bpi: 32)
 
       expect(instance.to_s).to eq('00000001000000100000001100000000')
     end
 
     it 'converts the internal array to a binary string when bpi == 64' do
-      instance = Bitary::Bitwarr.new(bytes: [1, 2, 3], bpi: 64)
+      instance = Bitary::Bitwarr.new(nil, bytes: [1, 2, 3], bpi: 64)
 
       expect(instance.to_s).to eq(
         '0000000100000010000000110000000000000000000000000000000000000000'
