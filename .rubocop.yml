@@ -23,3 +23,11 @@ Layout/LineLength:
 Style/MixinUsage:
   Exclude:
     - 'spec/**/*.rb'
+
+Style/ArgumentsForwarding:
+  Exclude:
+    - /**/*.rb
+
+Naming/BlockForwarding:
+  Exclude:
+    - /**/*.rb
