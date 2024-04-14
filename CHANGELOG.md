@@ -1,3 +1,10 @@
+## [0.2.0] - 2024-04-14
+
+- `Bitary#to_a` now returns a clone to prevent client code to misuse the data structure (same for `Bitary#each_byte`)
+- Streamline the internal array initialization
+- Enhance constructor implementation
+- `Bitary#set` and `Bitary#set` are now suffixed by `!`
+
 ## [0.1.9] - 2024-04-01
 
 - boost perf even more by inlining mapping operations
